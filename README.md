@@ -43,14 +43,15 @@ El sistema trabajará sobre una estructura tabular (por ejemplo, un archivo **CS
 
 ### Información estructural
 
-- Manipular y analizar datos en forma tabular.
-- Conocer cantidad de filas y columnas.
-- Conocer etiquetas de filas y columnas.
-- Conocer tipos de datos de las columnas:
-  - Tipos soportados: numérico, booleano, cadena.
-  - Valores faltantes representados como `N/A`.
-- Acceso a datos tanto por fila como por columna.
-- Las etiquetas pueden ser enteros o cadenas.
+- El sistema debe permitir manipular y analizar datos en forma tabular
+- Se debe poder conocer la cantidad de filas y columnas.
+- Se debe poder conocer las etiquetas de filas y columnas.
+- Se debe poder conocer los tipos de datos de las columnas.
+- Los tipos de datos soportados para una columna son: numérico, booleano, cadena.
+- Debe existir un valor especial que haga referencia a valores faltantes (N/A).
+- Se debe poder acceder a los datos tanto a nivel de fila como de columna.
+- Una etiqueta (label) puede ser en formato numérico entero o cadena.
+
 
 ### Carga y generación
 
@@ -63,19 +64,23 @@ Una estructura tabular puede generarse a partir de:
 
 ### Acceso y selección
 
-- Modificación directa de celdas.
-- Inserción de columnas a partir de otras columnas o secuencias lineales de Java.
-- Eliminación de filas o columnas.
-- Selección parcial usando listas de etiquetas.
+- Una estructura tabular puede modificarse de las siguientes formas:
+  - Accediendo directo a una celda y asignando un nuevo valor.
+  - Insertando una columna a partir de otra columna (con misma cantidad de elementos que     filas). 
+  - Insertando una columna nueva a partir de una secuencia lineal nativa de Java (con misma       cantidad de elementos que filas).
+  - Eliminando una columna o eliminando una fila.
+- El sistema debe permitir la selección parcial de la estructura tabular a través de una lista de etiquetas de cada índice.
+
 
 ### Operaciones
 
-- Selección parcial mediante filtros aplicados a valores.
-- Copia profunda de la estructura.
-- Concatenación de dos estructuras.
-- Ordenamiento de filas por uno o más criterios.
-- Imputación de valores faltantes con valores literales.
-- Muestreo aleatorio de filas (porcentaje del total).
+- El sistema debe permitir la selección parcial de la estructura tabular a través de un filtro aplicado a valores de las celdas. 
+- Se debe permitir la copia profunda de los elementos de la estructura para generar una nueva con mismos valores, pero independiente de la estructura original en memoria.
+- Se debe permitir generar una nueva estructura tabular a partir de la concatenación de dos estructuras existentes.
+- Se debe permitir ordenar las filas de la estructura según un criterio (ascendente o descendente) sobre una o más columnas.
+- El sistema debe incorporar la posibilidad de modificar (rellenar) las celdas con valores faltantes con cierto valor literal indicado.
+- El sistema debe ofrecer una selección aleatoria de filas según un porcentaje del total de la estructura. 
+
 
 ---
 
@@ -83,34 +88,41 @@ Una estructura tabular puede generarse a partir de:
 
 ### Restricciones técnicas
 
-- Implementación en **Java 8** o superior.
-- Uso exclusivo de estructuras nativas de Java (sin librerías externas salvo autorización).
+- La implementación debe estar en Java versión 8 o superior.
+- Se pueden usar estructuras de datos nativas de Java, pero no se deben usar librerías externas salvo autorización.
+
 
 ### Interoperabilidad
 
-- Lectura y escritura en formato **CSV**, incluyendo opciones de delimitador y encabezado.
+- Se debe soportar lectura y escritura en formato CSV, incluyendo opciones de delimitador y encabezado.
 
 ### Mantenibilidad
 
-- Sistema fácil de modificar y mantener.
-- Incorporación de nueva funcionalidad con mínimo impacto en el código existente.
+- El sistema debe ser fácil de modificar y mantener a lo largo del tiempo.
+- El sistema debe permitir incorporar nueva funcionalidad con el menor impacto posible sobre el código existente.
+
 
 ### Usabilidad
 
-- Presentación clara y sencilla de la salida en formato de texto tabular.
+- La salida tabular debe ser presentada en formato de texto, de forma clara y sencilla.
 
 ### Gestión de errores
 
-- Captura de todos los errores en tiempo de ejecución.
-- Clasificación mediante una jerarquía de excepciones.
+- Se debe capturar de todos los errores en tiempo de ejecución.
+- Debe haber una clasificación de errores mediante una jerarquía de excepciones.
 
 ### Rendimiento
 
-- Deseable un mecanismo para medir el costo de ejecución en tiempo.
+- Es deseable disponer de algún mecanismo que permita cuantificar el costo de ejecución de las operaciones, en términos de tiempo.
 
 ---
 
 ## Desglose de Requerimientos Funcionales y No Funcionales
+
+### Vista complementaria:
+
+Se presenta un desglose de los requerimientos funcionales y no funcionales en formato de macro-requerimientos, como forma de organizar de manera esquemática lo detallado anteriormente.
+
 
 ### Alcance del Proyecto
 

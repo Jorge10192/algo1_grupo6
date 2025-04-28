@@ -9,7 +9,7 @@ Alcance del Proyecto
 │   └── RF 1.4: Representar valores faltantes con valor especial N/A. (not available)
 │
 ├── Macro-requerimiento 2: Carga de datos
-│   ├── RF 2.1: Importar datos desde archivo CSV. (de novo a archivo preexistente)
+│   ├── RF 2.1: Importar datos desde archivo CSV. (de novo o archivo preexistente)
 │   ├── RF 2.2: Generar tabla a partir de listas / arrays nativos de java
 │   ├── RF 2.3: Importar y crear nuevas filas o columnas
 │   └── RF 2.4: Crear una copia profunda de una tabla.

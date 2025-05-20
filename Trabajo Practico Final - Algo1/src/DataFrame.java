@@ -70,6 +70,22 @@ public class DataFrame {
     // Método interno para poblar el dataframe
     private void generarDataFrame(List<List<Object>> rows, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
         
+        /*
+        Requerimientos pendientes:
+        -Los tipos de datos soportados para una columna son: numérico, booleano, cadena.
+        -Debe existir un valor especial que haga referencia a valores faltantes (N/A).
+        -Una etiqueta (label) puede ser en formato numérico entero o cadena.
+        -Dos columnas no pueden tener el mismo nombre. En caso contrario, tirar una excepción.
+        -El dataFrame puede generarse a partir de un CSV: La idea es que el constructor convierta un .csv en
+         una lista de listas que se pueda pasar como argumento a la función generateDataFrame.
+
+        Cosas a corregir:
+        -Modificar validateRows: determinar si es mejor que todas las rows sean del mismo tamaño
+        o permitir que sean de tamaños distintos y que los datos que no tienen las filas
+        más cortas sean completados por N/A
+        - Pasar a columnLabels el numero de columnas como atributo
+        */
+        
         validateRows(rows);
         //Manejar labels de columnas: generar nuevos si no label=null, o validar que las labels sean consistentes con la data
         if(columnLabels == null){

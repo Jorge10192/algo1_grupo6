@@ -9,8 +9,19 @@ public class Row {
         this.cells =cells;
     }
 
-    public Row(List<Cell> cells){
-        this.cells =cells;
-        //Agregar un método para crear labels de las filas
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Label: ").append(label != null ? label.toString() : "null").append(" | Cells: [");
+        for (int i = 0; i < cells.size(); i++) {
+            sb.append(cells.get(i));
+            if (i < cells.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+
+        return sb.toString();
     }
 }

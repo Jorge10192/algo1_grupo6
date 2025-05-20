@@ -5,8 +5,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.InvalidShape;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidShape {
         List<List<Object>> lista = new ArrayList<>();
 
         // Creating and adding lists to the main list
@@ -36,8 +38,7 @@ public class Main {
         labels.add("B");
         labels.add("C");
 
-        DataFrame df = new DataFrame(lista, labels);
-        System.out.println(df);
-        //Hola Mundo
+        DataFrame df = new DataFrame(lista, labels, labels);
+        df.head();
     }
 }

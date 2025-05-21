@@ -24,7 +24,7 @@ public class Main {
 
         List<Object> list3 = new ArrayList<>();
         list3.add(7);
-        list3.add(8);
+        list3.add(null);
         list3.add(9);
 
         // Adding individual lists to the main list

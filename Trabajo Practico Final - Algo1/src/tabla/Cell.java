@@ -1,11 +1,11 @@
 package tabla;
 
-public class Cell {
+public class Cell<T>{
     //Atributo
-    private Object content;
+    private T content;
 
     //Constructor
-    public Cell(Object content){
+    public Cell(T content){
         this.content = content;
     }
 

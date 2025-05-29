@@ -6,7 +6,7 @@ import java.util.List;
 public class Column<T> {
     //Atributos
     private Object label;
-    private List<Cell> cells;
+    private List<Cell<T>> cells;
 
     //Constructor
     public Column(Object label){
@@ -19,11 +19,11 @@ public class Column<T> {
         return this.label;
     }
 
-    public void addCell(Cell cell){
+    public void addCell(Cell<T> cell){
         cells.add(cell);
     }
 
-    public Cell getCell(int i){
+    public Cell<T> getCell(int i){
         return cells.get(i);
     }
 

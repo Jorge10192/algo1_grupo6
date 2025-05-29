@@ -30,7 +30,7 @@ public class DataFrame {
     }
 
     // Constructor desde lista de listas 
-    public DataFrame(List<List<Object>> data, List<Object> labels, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(List<? extends List<?>> data, List<Object> labels, List<Object> rowLabels) throws InvalidShape {
         this();
         generarDataFrame(data, labels, rowLabels);
     }
@@ -69,7 +69,7 @@ public class DataFrame {
         // Implementación: copiar columnas, celdas y filas según la lógica deseada (profunda o superficial)
     }
 
-    //Constructor por importacion de CSV
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -93,8 +93,8 @@ public class DataFrame {
 
     /*
         Requerimientos pendientes:
-            -Los tipos de datos soportados para una columna son: numérico, booleano, cadena.
-            -Debe existir un valor especial que haga referencia a valores faltantes (N/A).
+            
+        -Debe existir un valor especial que haga referencia a valores faltantes (N/A).
         -Una etiqueta (label) puede ser en formato numérico entero o cadena.
         -Dos columnas no pueden tener el mismo nombre. En caso contrario, tirar una excepción.
         -El dataFrame puede generarse a partir de un CSV: La idea es que el constructor convierta un .csv en
@@ -108,15 +108,21 @@ public class DataFrame {
         */
 
     // Método interno para poblar el dataframe
-    private void generarDataFrame(List<List<Object>> rows, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
-        
-        validateRows(rows);
+    private void generarDataFrame(List<? extends List<?>> rows, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
+        //Verifica que todas las listas dentro de rows tengan el mismo tamaño
+        validateRowSize(rows);
+
+        //Para la lista de filas, se verifica que el largo de cada fila coincida con la cantidad de headers de columnas
+        if(columnLabels!=null){
+            validateRowShape(rows, columnLabels);
+        }
+
         //Manejar labels de columnas: generar nuevos si no label=null, o validar que las labels sean consistentes con la data
-        if(columnLabels == null){
+        if(columnLabels == null || columnLabels.isEmpty()){
             columnLabels = generateColumnLabels(rows);
         }
         //Manejar labels de filas: generar nuevos si no label=null, o validar que las labels sean consistentes con la data
-        if(rowLabels == null){
+        if(rowLabels == null || columnLabels.isEmpty()){
             rowLabels = generateRowLabels(rows);
         }
         
@@ -124,19 +130,25 @@ public class DataFrame {
         fillRows(rowLabels);
     }
 
-    private void validateRows(List<List<Object>> rows) throws InvalidShape{
-        int ref =0;
-        for (int i=0;i<rows.size();i++ ){
-            if(i==0){
-                ref = rows.get(i).size();
-            }
+    private void validateRowSize(List<? extends List<?>> rows) throws InvalidShape{
+        //Si las filas tienen distinto tamaño se arroja una excepción
+        int ref =rows.get(0).size();
+        for (int i=1;i<rows.size();i++ ){
             if (rows.get(i).size()!=ref){
                 throw new InvalidShape();
             }
         }
     }
 
-    private List<Object> generateColumnLabels(List<List<Object>> rows){
+    private void validateRowShape(List<? extends List<?>> rows, List<Object> columnLabels)throws InvalidShape{
+        for (List<?> row : rows){
+            if(row.size()!=columnLabels.size()){
+                throw new InvalidShape();
+            }
+        }
+    }
+
+    private List<Object> generateColumnLabels(List<? extends List<?>> rows){
         int nCols = rows.get(0).size();
         List<Object> labels = new ArrayList<>();
         for(int i=0; i<nCols; i++){
@@ -145,7 +157,7 @@ public class DataFrame {
         return labels;
     }
 
-    private List<Object> generateRowLabels(List<List<Object>> rows){
+    private List<Object> generateRowLabels(List<? extends List<?>> rows){
         int nRows = rows.size();
         List<Object> labels = new ArrayList<>();
         for(int i=0; i<nRows; i++){
@@ -154,23 +166,17 @@ public class DataFrame {
         return labels;
     }
 
-    private void fillColumns(List<List<Object>> rows, List<Object> columnLabels){
+    private void fillColumns(List<? extends List<?>> rows, List<Object> columnLabels){
         for (int i = 0; i < columnLabels.size(); i++) {
             Object label = columnLabels.get(i);
             Column column = new Column(label);
 
-            Class<?> columnType = null;
-            for (List<Object> row : rows) {
+            //Class<?> columnType = null;
+            for (List<?> row : rows) {
                 Object value = row.get(i);
                 if (value == null || value.toString().equalsIgnoreCase("N/A")) {
                     column.addCell(new Cell(DataFrame.NA)); // valores faltantes tratados como null
                     continue;
-                }
-
-                if (columnType == null) {
-                    columnType = value.getClass();
-                } else if (!columnType.isAssignableFrom(value.getClass())) {
-                    throw new IllegalArgumentException("Valores de tipos distintos en la columna '" + label + "'");
                 }
 
                 if (!(value instanceof Number || value instanceof Boolean || value instanceof String)) {

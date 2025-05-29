@@ -16,7 +16,7 @@ no esperaba utilizar esta clase, el compilador lo arrojo como alerta de buena pr
 
 public class Main {
     //Clase de java que permite registrar mensaje durante la ejecucion de un programa.
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
+    //private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) throws InvalidShape {
 
         //Ejemplo de creacion de un DataFrame interno en JAVA
@@ -51,7 +51,7 @@ public class Main {
 
         DataFrame df1 = new DataFrame(lista, labels, labels);
         df1.head();
-
+        /* 
         //Ejemplo1 de impresion de un DataFrame caragado correctamente desde un CSV.
         ImportCSV importador1 = new ImportCSV();
         String ruta = "/home/jorge/Escritorio/TP_FINAL_ALGO1_V2/prueba1.csv";
@@ -72,7 +72,7 @@ public class Main {
             System.out.println(df3);
         } catch (Exception e) {
             logger.severe("Error al importar el CSV: " + e.getMessage());
-        }
+        }*/
 
 
     }

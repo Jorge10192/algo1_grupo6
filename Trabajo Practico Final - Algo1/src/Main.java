@@ -2,7 +2,7 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
 import tabla.DataFrame;
-import importador.ImportCSV;
+import importador.*;
 import exceptions.InvalidShape;
 
 
@@ -50,7 +50,12 @@ public class Main {
         labels.add("C");
 
         DataFrame df1 = new DataFrame(lista, labels, labels);
-        df1.head();
+        df1.head(5);
+        
+        CSVParser csvParser = new CSVParser();
+
+        DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/iris.csv", null, false);
+        df2.head(5);  
         /* 
         //Ejemplo1 de impresion de un DataFrame caragado correctamente desde un CSV.
         ImportCSV importador1 = new ImportCSV();

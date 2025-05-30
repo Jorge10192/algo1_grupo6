@@ -209,9 +209,12 @@ public class DataFrame {
         }
     };
 
-    public void head(){
+    public void head(int n){
+        int i = 0;
         for (Row row : rows){
+            if(i ==n){break;}
             System.out.println(row);
+            i++;
         }
     }
 

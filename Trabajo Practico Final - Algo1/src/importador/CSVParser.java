@@ -19,10 +19,16 @@ public class CSVParser {
         try{
             List<String> lineas = leerLineas(path);
             try{
-                String[][] celdas = parserLineas(lineas,sep);
+                Object[][] celdas = parserLineas(lineas,sep);
+                List<List<Object>> lista_celdas = convertirArrayALista(celdas);
                 try{
-                    //agregar funcionalidad has_headers: antes de eso verificar el tipo de dato de las labels en la clase DataFrame
-                    return new DataFrame(convertirArrayALista(celdas), null,null);}
+                    if(has_headers==false){
+                        return new DataFrame(lista_celdas, null,null);
+                    }else{
+                        List<Object> headers = lista_celdas.get(0);
+                        lista_celdas.remove(0);
+                        return new DataFrame(lista_celdas, headers,null);
+                    }}
                 catch(InvalidShape e){
                     System.err.println(e.getMessage());
                 }
@@ -55,7 +61,7 @@ public class CSVParser {
         }
     }
 
-    public static String[][] parserLineas(List<String> lineas, String sep) throws CSVParserException {
+    public static Object[][] parserLineas(List<String> lineas, String sep) throws CSVParserException {
         /*Convierte una lista de líneas (como las obtenidas de un archivo CSV) en una matriz bidimensional de String.
 
         Divide cada línea por comas (,) usando split(",").
@@ -66,6 +72,7 @@ public class CSVParser {
         Modificaciones hechas: 
         - Agrego la opción de elegir el separador. Aunque no sé si es mejor definir al separador como atributo de clase y que se modifique con getter y setter
         - Agrego la posibilidad de que si hay un espacio vacío entre comas, su posición en el array sea completado por un null, para después ser manejado como N/A 
+        - Parseo cada dato de String al tipo de dato más adecuado con ParseCellValue
         */
         
         if (sep == null){
@@ -73,17 +80,17 @@ public class CSVParser {
         }
 
         int filas = lineas.size();
-        String[][] celdas = null;
+        Object[][] celdas = null;
         for(int i=0; i < lineas.size(); i++) {
             String linea = lineas.get(i);
             String[] campos = linea.split(sep);
             if (celdas == null) {
-                celdas = new String[filas][campos.length];
+                celdas = new Object[filas][campos.length];
             }
             if (celdas[0].length != campos.length) {
                 throw new CSVParserException(i, celdas[0].length, campos.length);}
             for(int j=0; j < campos.length; j++) {
-                celdas[i][j] = campos[j].isEmpty() ? null : campos[j];
+                celdas[i][j] = campos[j].isEmpty() ? null : parseCellValue(campos[j]);
             }
         }
         return celdas;
@@ -131,11 +138,11 @@ public class CSVParser {
         }
     }
 
-    private static List<List<String>> convertirArrayALista(String[][] array) {
-        List<List<String>> lista2D = new ArrayList<>();
-        for (String[] fila : array) {
-            List<String> filaLista = new ArrayList<>();
-            for (String celda : fila) {
+    private static List<List<Object>> convertirArrayALista(Object[][] array) {
+        List<List<Object>> lista2D = new ArrayList<>();
+        for (Object[] fila : array) {
+            List<Object> filaLista = new ArrayList<>();
+            for (Object celda : fila) {
                 filaLista.add(celda);
             }
             lista2D.add(filaLista);
@@ -143,6 +150,15 @@ public class CSVParser {
         return lista2D;
     }
 
-
+    private static Object parseCellValue(String value) {
+        if (value.matches("-?\\d+")) {
+            return Integer.parseInt(value);
+        } else if (value.matches("-?\\d*\\.\\d+")) {
+            return Double.parseDouble(value);
+        } else if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+            return Boolean.parseBoolean(value);
+        }
+        return value;
+    }
 
 }

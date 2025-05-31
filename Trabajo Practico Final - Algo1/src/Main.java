@@ -54,7 +54,7 @@ public class Main {
         
         CSVParser csvParser = new CSVParser();
 
-        DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/iris.csv", null, false);
+        DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/iris.csv", null, true);
         df2.head(5);  
         /* 
         //Ejemplo1 de impresion de un DataFrame caragado correctamente desde un CSV.

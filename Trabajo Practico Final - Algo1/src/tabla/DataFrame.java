@@ -211,6 +211,11 @@ public class DataFrame {
 
     public void head(int n){
         int i = 0;
+        String headers = "";
+        for(Column c:columns){
+            headers += "| "+c.getLabel().toString()+" | ";
+        }
+        System.out.println(headers);
         for (Row row : rows){
             if(i ==n){break;}
             System.out.println(row);

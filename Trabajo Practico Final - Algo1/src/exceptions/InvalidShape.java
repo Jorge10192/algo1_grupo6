@@ -1,6 +1,6 @@
 package exceptions;
 
-public class InvalidShape extends Exception {
+public class InvalidShape extends RuntimeException {
     public InvalidShape(String message) {
         super(message);
     }

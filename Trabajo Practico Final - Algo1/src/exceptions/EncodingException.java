@@ -2,7 +2,7 @@ package exceptions;
 
 import importador.EncodingUtils;
 
-public class EncodingException extends Exception {
+public class EncodingException extends RuntimeException {
     private final String encoding;
 
     public EncodingException(String encoding){

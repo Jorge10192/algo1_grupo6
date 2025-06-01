@@ -18,36 +18,72 @@ import java.util.List;
 import exceptions.*;
 
 public class CSVParser {
+    
+    //Atributos
+    private String sep = ",";
+    private String encoding = "UTF-8";
+    private boolean hasHeaders = true;
+    
+    //Constructores
+    public CSVParser(){}
 
-    public DataFrame toDataFrame(String path, String sep, boolean has_headers,String encoding){
-        try{
-            List<String> lineas = leerLineas(path, encoding);
-            try{
-                Object[][] celdas = parserLineas(lineas,sep);
-                List<List<Object>> lista_celdas = convertirArrayALista(celdas);
-                try{
-                    if(has_headers==false){
-                        return new DataFrame(lista_celdas, null,null);
-                    }else{
-                        List<Object> headers = lista_celdas.get(0);
-                        lista_celdas.remove(0);
-                        return new DataFrame(lista_celdas, headers,null);
-                    }}
-                catch(InvalidShape e){
-                    System.err.println(e.getMessage());
-                }
-            }catch(CSVParserException e){
-                System.err.println(e.getMessage());}
+    public CSVParser(String separator, String encoding, boolean hasHeaders) {
+        this.sep = separator;
+        this.encoding = encoding;
+        this.hasHeaders = hasHeaders;
+    }
 
-        }catch(IOException e){
-            System.err.println(e.getMessage());
-        }catch(EncodingException e){
-            System.err.println(e.getMessage());
+    //Getters
+    public String getSeparador(){
+        return sep;
+    }
+    public String getEncoding(){
+        return encoding;
+    }
+    public boolean hasHeaders(){
+        return hasHeaders;
+    }
+
+    //Setters
+    public void setSeparador(String sep){
+        this.sep = sep;
+    }
+    public void setEncoding(String encoding){
+        if(!EncodingUtils.encodings.contains(encoding)){
+            throw new EncodingException(encoding);
         }
-        return null;
+        this.encoding = encoding;
+    }
+    public void setHasHeaders(boolean hasHeaders){
+        this.hasHeaders = hasHeaders;
+    }
+
+    //Comportamiento
+
+    public DataFrame toDataFrame(String path) throws IOException, CSVParserException, InvalidShape{
+
+        File file = new File(path);
+            if (!file.exists() || !file.canRead()) {
+                throw new IOException("El archivo no existe o no se puede leer: " + path);
+            }
+
+        List<String> lineas = leerLineas(path, encoding);
+
+        Object[][] celdas = parserLineas(lineas,sep);
+        List<List<Object>> lista_celdas = convertirArrayALista(celdas);
+        
+        if(hasHeaders==false){
+            return new DataFrame(lista_celdas, null,null);
+
+        }else{
+            List<Object> headers = lista_celdas.get(0);
+            lista_celdas.remove(0);
+            return new DataFrame(lista_celdas, headers,null);
+        }
+
     }
     
-    public static List<String> leerLineas(String filepath, String encoding) throws IOException, EncodingException {
+    public static List<String> leerLineas(String filepath, String encoding) throws IOException {
 
         /*Lee un archivo línea por línea y devuelve una lista con todas las líneas.
 
@@ -113,7 +149,7 @@ public class CSVParser {
         }
     }
     
-    public static String celdasToString(String[][] celdas, String sep) {
+    public static String celdasToString(Object[][] celdas, String sep) {
 
         /*Convierte una matriz de texto (String[][]) en una cadena formateada para visualización.
 
@@ -123,9 +159,9 @@ public class CSVParser {
         if (sep == null) {
             sep = " | ";
         }
-        for (String[] fila : celdas) {
-            for (String celda : fila) {
-                salida += celda + sep;
+        for (Object[] fila : celdas) {
+            for (Object celda : fila) {
+                salida += celda.toString() + sep;
             }
             salida += "\n";
         }

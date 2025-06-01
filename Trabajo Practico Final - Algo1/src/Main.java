@@ -54,10 +54,31 @@ public class Main {
         
         CSVParser csvParser = new CSVParser();
         try{
-            DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv", null, true,"UTF-8");
+            DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv");
             df2.head(5);
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
+        try{
+            DataFrame df3 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba3.csv");
+            df3.head(5);
+        }catch(Exception e){
+            System.err.println(("Error al importar el CSV: " + e.getMessage()));;
+        }
+
+        /*Test unitarios recomendados:
+
+            CSV con y sin headers.
+
+            Valores numéricos, booleanos y string.
+
+            Campos vacíos o nulos.
+
+            Archivos con separadores personalizados.
+
+            Codificaciones no válidas.
+
+            Líneas con distinta cantidad de columnas 
+        */
     }
 }

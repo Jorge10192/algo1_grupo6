@@ -4,20 +4,24 @@ import tabla.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import exceptions.InvalidShape;
+import exceptions.*;
 
 public class CSVParser {
 
-    public DataFrame toDataFrame(String path, String sep, boolean has_headers){
+    public DataFrame toDataFrame(String path, String sep, boolean has_headers,String encoding){
         try{
-            List<String> lineas = leerLineas(path);
+            List<String> lineas = leerLineas(path, encoding);
             try{
                 Object[][] celdas = parserLineas(lineas,sep);
                 List<List<Object>> lista_celdas = convertirArrayALista(celdas);
@@ -37,11 +41,13 @@ public class CSVParser {
 
         }catch(IOException e){
             System.err.println(e.getMessage());
+        }catch(EncodingException e){
+            System.err.println(e.getMessage());
         }
         return null;
     }
     
-    public static List<String> leerLineas(String filepath) throws IOException {
+    public static List<String> leerLineas(String filepath, String encoding) throws IOException, EncodingException {
 
         /*Lee un archivo línea por línea y devuelve una lista con todas las líneas.
 
@@ -49,7 +55,11 @@ public class CSVParser {
 
         Devuelve una List<String> donde cada elemento es una línea del archivo. */
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filepath))) {
+        if(!EncodingUtils.encodings.contains(encoding)){
+            throw new EncodingException(encoding);
+        }
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filepath), Charset.forName(encoding)))) {
             String linea;
             List<String> lineas = new LinkedList<>();
             while ((linea = bufferedReader.readLine()) != null) {
@@ -83,7 +93,7 @@ public class CSVParser {
         Object[][] celdas = null;
         for(int i=0; i < lineas.size(); i++) {
             String linea = lineas.get(i);
-            String[] campos = linea.split(sep);
+            String[] campos = linea.split(sep,-1);
             if (celdas == null) {
                 celdas = new Object[filas][campos.length];
             }

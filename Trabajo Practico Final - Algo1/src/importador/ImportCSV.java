@@ -1,6 +1,7 @@
 package importador;
 
 import tabla.DataFrame;
+import exceptions.CSVParserException;
 import exceptions.InvalidShape;
 
 import java.io.*;

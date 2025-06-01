@@ -53,32 +53,11 @@ public class Main {
         df1.head(5);
         
         CSVParser csvParser = new CSVParser();
-
-        DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/iris.csv", null, true);
-        df2.head(5);  
-        /* 
-        //Ejemplo1 de impresion de un DataFrame caragado correctamente desde un CSV.
-        ImportCSV importador1 = new ImportCSV();
-        String ruta = "/home/jorge/Escritorio/TP_FINAL_ALGO1_V2/prueba1.csv";
-
-        try {
-            DataFrame df2 = importador1.importar(ruta, true);
-            System.out.println(df2);
-        } catch (Exception e) {
-            logger.severe("Error al importar el CSV: " + e.getMessage());
+        try{
+            DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv", null, true,"UTF-8");
+            df2.head(5);
+        }catch(Exception e){
+            System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
-
-        //Ejemplo2 de impresion de un DataFrame caragado con datos faltantes desde un CSV.
-        ImportCSV importador2 = new ImportCSV();
-        String ruta2 = "/home/jorge/Escritorio/TP_FINAL_ALGO1_V2/prueba2.csv";
-
-        try {
-            DataFrame df3 = importador2.importar(ruta2, true);
-            System.out.println(df3);
-        } catch (Exception e) {
-            logger.severe("Error al importar el CSV: " + e.getMessage());
-        }*/
-
-
     }
 }

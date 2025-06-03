@@ -6,7 +6,6 @@ El objetivo será desarrollar una librería en **Java** que permita manipular y 
 Ofrecerá diversas operaciones y funciones para facilitar el trabajo de un analista de datos que desee trabajar con Java.  
 Además, se busca que la librería sea **extensible** para futuras incorporaciones de funcionalidades.
 
-
 ---
 
 ## Alcance
@@ -23,7 +22,7 @@ El sistema podrá realizar las siguientes funciones:
 - Concatenación de tablas.
 - Ordenamiento de filas por uno o más criterios de columnas.
 - Imputación de valores faltantes.
-- Muestreo aleatorio de filas.
+- Muestreo aleatorio de filas. 
 
 ---
 

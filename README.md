@@ -6,6 +6,7 @@ El objetivo será desarrollar una librería en **Java** que permita manipular y 
 Ofrecerá diversas operaciones y funciones para facilitar el trabajo de un analista de datos que desee trabajar con Java.  
 Además, se busca que la librería sea **extensible** para futuras incorporaciones de funcionalidades.
 
+
 ---
 
 ## Alcance

@@ -1,14 +1,23 @@
+package tabla;
+import tabla.Cell;
+
 import java.util.List;
 
 public class Row {
-    private Object label;
+    //Atributos
+    private Label label;
     private List<Cell> cells;
+    private int index;
 
-    public Row(Object label, List<Cell> cells){
+    //Constructor
+    
+    public Row(Label label, List<Cell> cells){
         this.label = label;
         this.cells =cells;
     }
 
+    /* 
+    //Constructor por Strings
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -23,5 +32,10 @@ public class Row {
         sb.append("]");
 
         return sb.toString();
+    }*/
+
+    //Metodos
+    public List<Cell> getCells() {
+        return this.cells;
     }
 }

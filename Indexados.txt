@@ -1,0 +1,93 @@
+
+
+//Clase Dataframe
+
+"//Devolver lista de labels de columnas
+    public List<Object> listaLabelsColumnas(){
+        List listaAux = new ArrayList<>();
+
+        for (Column column : columns){
+            listaAux.add(column.getLabel());
+        }
+        return listaAux;
+
+    }
+
+    //Metodo para seleccionar una columna a partir de un label.
+
+    public int devolverIndiceColumna(Object label){
+        List<Object> listaLabelsColumnas = listaLabelsColumnas();
+        int posicionColumna = 0;
+
+        for (Object label_columna : listaLabelsColumnas){
+            if (label_columna == label){
+                return posicionColumna;
+            } else {
+                posicionColumna++;
+            }
+        }
+        //Devolver excepcion
+        return 0;
+    }
+    
+    public Column devolverColumna(Object label_columna){
+        int indice_columna = devolverIndiceColumna(label_columna);
+        return columns.get(indice_columna);
+    }
+
+    //Devolver lista de labels de filas
+    public List<Object> listaLabelsFilas(){
+        List listaAux = new ArrayList<>();
+
+        for (Row row : rows){
+            listaAux.add(row.getLabel());
+        }
+        return listaAux;
+
+    }
+
+    //Metodo para seleccionar una fila a partir de un label.
+    public int devolverIndiceFila(Object labelFila) {
+        List<Object> listaLabelsFilas = listaLabelsFilas();
+        int posicionFila = 0;
+
+        for (Object label_fila : listaLabelsFilas) {
+            if (label_fila == labelFila) {
+                return posicionFila;
+            } else {
+                posicionFila++;
+            }
+        }
+        return 0; //agregar una excepcion
+    }
+
+    public Row devolverFila(Object label_fila){
+        int indice = devolverIndiceFila(label_fila);
+        return rows.get(indice);
+    }
+    
+    //Seleccionar Celda
+    public Cell devolveCelda(Object label_columna, Object label_fila){
+        int indice_fila = devolverIndiceFila(label_fila);
+        int indice_columna = devolverIndiceColumna(label_columna);
+        
+        Column columna = devolverColumna(indice_columna);
+        
+        return columna.getCell(indice_fila);
+    }"
+
+
+//Clase Row - Verifica el Label del Row
+
+//Metodo Verificador (dado un label verifica si pertenece a esa fila)
+    public boolean verificarLabelFila(Object label_ingreso){
+        return (label == label_ingreso);
+    }
+
+
+//Clase Column - Verifica el label de Column
+
+//Metodo Verificador (dado un label verifica si pertenece a esa columna)
+public boolean verificarLabelColumna(Object label_ingreso){
+        return (label == label_ingreso);
+    }

@@ -20,7 +20,7 @@ public class DataFrame {
     }
 
     // Constructor desde matriz 2D
-    public DataFrame(Object[][] array2D, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(Object[][] array2D, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object[] row : array2D) {
@@ -34,7 +34,7 @@ public class DataFrame {
     }
 
     // Constructor desde lista de listas 
-    public DataFrame(List<? extends List<?>> data, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(List<? extends List<?>> data, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException {
         this();
 
         List<Label> labelsC = adaptarLabels(columnLabels);
@@ -44,7 +44,7 @@ public class DataFrame {
     }
 
     // Constructor desde una sola columna
-    public DataFrame(List<Object> columnData, Object columnLabel, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(List<Object> columnData, Object columnLabel, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object value : columnData) {
@@ -213,7 +213,7 @@ public class DataFrame {
         }
     }
 
-    private List<Label> adaptarLabels(List<?> labels){
+    private List<Label> adaptarLabels(List<?> labels) throws IllegalArgumentException{
         
         List<Label> aux = new ArrayList<>();
 

@@ -8,12 +8,15 @@ public class Row {
     private Label label;
     private List<Cell> cells;
     private int index;
+
     //Constructor
+    
     public Row(Label label, List<Cell> cells){
         this.label = label;
         this.cells =cells;
     }
-    
+
+    /* 
     //Constructor por Strings
     @Override
     public String toString() {
@@ -29,7 +32,7 @@ public class Row {
         sb.append("]");
 
         return sb.toString();
-    }
+    }*/
 
     //Metodos
     public List<Cell> getCells() {

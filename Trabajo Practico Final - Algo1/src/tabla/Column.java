@@ -5,17 +5,17 @@ import java.util.List;
 
 public class Column<T> {
     //Atributos
-    private Object label;
+    private Label label;
     private List<Cell<T>> cells;
 
     //Constructor
-    public Column(Object label){
+    public Column(Label label){
         this.label = label;
         this.cells = new ArrayList<>();
     }
 
     //Metodos
-    public Object getLabel() {
+    public Label getLabel() {
         return this.label;
     }
 

@@ -5,13 +5,15 @@ import java.util.List;
 
 public class Row {
     //Atributos
-    private Object label;
+    private Label label;
     private List<Cell> cells;
+    private int index;
     //Constructor
-    public Row(Object label, List<Cell> cells){
+    public Row(Label label, List<Cell> cells){
         this.label = label;
         this.cells =cells;
     }
+    
     //Constructor por Strings
     @Override
     public String toString() {

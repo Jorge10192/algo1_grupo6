@@ -9,34 +9,42 @@ import exceptions.InvalidShape;
 public class DataFrame {
 
     private List<Column> columns;
-    private List<Row> rows;
-    private int nRows;
+    private List<Row> rows; 
+    //Map<Label, Integer> rows el integer va a ser el indice de la fila  
+    
 
     // Constructor por defecto
     public DataFrame() {
         this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
-        this.nRows = 0;
     }
 
     // Constructor desde matriz 2D
-    public DataFrame(Object[][] array2D, List<Object> labels, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(Object[][] array2D, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object[] row : array2D) {
             data.add(Arrays.asList(row));
         }
-        generarDataFrame(data, labels, rowLabels);
+
+        List<Label> labelsC = adaptarLabels(columnLabels);
+        List<Label> labelsR = adaptarLabels(rowLabels);
+
+        generarDataFrame(data, labelsC, labelsR);
     }
 
     // Constructor desde lista de listas 
-    public DataFrame(List<? extends List<?>> data, List<Object> labels, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(List<? extends List<?>> data, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
         this();
-        generarDataFrame(data, labels, rowLabels);
+
+        List<Label> labelsC = adaptarLabels(columnLabels);
+        List<Label> labelsR = adaptarLabels(rowLabels);
+
+        generarDataFrame(data, labelsC, labelsR);
     }
 
     // Constructor desde una sola columna
-    public DataFrame(List<Object> columnData, Object label, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(List<Object> columnData, Object columnLabel, List<Object> rowLabels) throws InvalidShape {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object value : columnData) {
@@ -44,9 +52,13 @@ public class DataFrame {
             row.add(value);
             data.add(row);
         }
-        generarDataFrame(data, List.of(label), rowLabels);
-    }
 
+        List<Label> labelsC = adaptarLabels(List.of(columnLabel));
+        List<Label> labelsR = adaptarLabels(rowLabels);
+
+        generarDataFrame(data, labelsC, labelsR);
+    }
+    /* 
     // Constructor desde un mapa de columnas
     public DataFrame(Map<String, List<Object>> columnMap, List<Object> rowLabels) throws InvalidShape {
         this();
@@ -62,7 +74,7 @@ public class DataFrame {
             data.add(row);
         }
         generarDataFrame(data, labels, rowLabels);
-    }
+    }*/
 
     // Constructor copia
     public DataFrame(DataFrame other) {
@@ -108,7 +120,7 @@ public class DataFrame {
         */
 
     // Método interno para poblar el dataframe
-    private void generarDataFrame(List<? extends List<?>> rows, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape {
+    private void generarDataFrame(List<? extends List<?>> rows, List<Label> columnLabels, List<Label> rowLabels) throws InvalidShape {
         //Verifica que todas las listas dentro de rows tengan el mismo tamaño
         validateRowSize(rows);
 
@@ -122,7 +134,7 @@ public class DataFrame {
             columnLabels = generateColumnLabels(rows);
         }
         //Manejar labels de filas: generar nuevos si no label=null, o validar que las labels sean consistentes con la data
-        if(rowLabels == null || columnLabels.isEmpty()){
+        if(rowLabels == null || rowLabels.isEmpty()){
             rowLabels = generateRowLabels(rows);
         }
         
@@ -140,7 +152,7 @@ public class DataFrame {
         }
     }
 
-    private void validateRowShape(List<? extends List<?>> rows, List<Object> columnLabels)throws InvalidShape{
+    private void validateRowShape(List<? extends List<?>> rows, List<Label> columnLabels)throws InvalidShape{
         for (List<?> row : rows){
             if(row.size()!=columnLabels.size()){
                 throw new InvalidShape();
@@ -148,27 +160,26 @@ public class DataFrame {
         }
     }
 
-    private List<Object> generateColumnLabels(List<? extends List<?>> rows){
+    private List<Label> generateColumnLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
         int nCols = rows.get(0).size();
-        List<Object> labels = new ArrayList<>();
+        List<Label> labels = new ArrayList<>();
         for(int i=0; i<nCols; i++){
-            labels.add(i);
+            labels.add(new Label(i));
         }
         return labels;
     }
 
-    private List<Object> generateRowLabels(List<? extends List<?>> rows){
-        int nRows = rows.size();
-        List<Object> labels = new ArrayList<>();
-        for(int i=0; i<nRows; i++){
-            labels.add(i);
+    private List<Label> generateRowLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
+        List<Label> labels = new ArrayList<>();
+        for(int i=0; i<rows.size(); i++){
+            labels.add(new Label(i));
         }
         return labels;
     }
 
-    private void fillColumns(List<? extends List<?>> rows, List<Object> columnLabels){
+    private void fillColumns(List<? extends List<?>> rows, List<Label> columnLabels){
         for (int i = 0; i < columnLabels.size(); i++) {
-            Object label = columnLabels.get(i);
+            Label label = columnLabels.get(i);
             Column column = new Column(label);
 
             //Class<?> columnType = null;
@@ -190,7 +201,7 @@ public class DataFrame {
     }
 
 
-    private void fillRows(List<Object> rowLabels){
+    private void fillRows(List<Label> rowLabels){
         //Se recorre cada columna para generar las filas, esta vez las filas son listas que guardan la referencia a las celdas
         
         for (int i = 0; i < rowLabels.size(); i++) {
@@ -200,6 +211,21 @@ public class DataFrame {
             }
             this.rows.add(new Row(rowLabels.get(i), cellList));
         }
+    }
+
+    private List<Label> adaptarLabels(List<?> labels){
+        
+        List<Label> aux = new ArrayList<>();
+
+        if (labels == null || labels.isEmpty()) {
+            return aux; // Devuelve lista vacía
+        }
+
+        for (Object l:labels){
+            Label label = new Label(l);
+            aux.add(label);
+        }
+        return aux;
     }
 
     public static final Object NA = new Object() {

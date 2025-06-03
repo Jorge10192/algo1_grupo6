@@ -19,4 +19,7 @@ public class Cell<T>{
     public Object getValue() {
         return this.content;
     }
+    public void setValue(T content){
+        this.content = content;
+    }
 }

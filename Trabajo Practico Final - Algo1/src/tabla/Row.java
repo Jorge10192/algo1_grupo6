@@ -6,36 +6,21 @@ import java.util.List;
 public class Row {
     //Atributos
     private Label label;
-    private List<Cell> cells;
     private int index;
 
     //Constructor
-    
-    public Row(Label label, List<Cell> cells){
+
+    public Row (Label label, int index){
         this.label = label;
-        this.cells =cells;
+        this.index = index;
     }
 
-    /* 
-    //Constructor por Strings
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
+    //Getters
 
-        sb.append("Label: ").append(label != null ? label.toString() : "null").append(" | Cells: [");
-        for (int i = 0; i < cells.size(); i++) {
-            sb.append(cells.get(i));
-            if (i < cells.size() - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append("]");
-
-        return sb.toString();
-    }*/
-
-    //Metodos
-    public List<Cell> getCells() {
-        return this.cells;
+    public Label getLabel(){
+        return label;
+    }
+    public int getIndex(){
+        return index;
     }
 }

@@ -81,28 +81,6 @@ public class DataFrame {
         // Implementación: copiar columnas, celdas y filas según la lógica deseada (profunda o superficial)
     }
 
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        // Imprimir los nombres de las columnas
-        for (Column col : columns) {
-            sb.append(col.getLabel()).append("\t");
-        }
-        sb.append("\n");
-
-        // Imprimir las filas (cada fila ya contiene las celdas en orden)
-        for (Row row : rows) {
-            for (Cell cell : row.getCells()) {
-                sb.append(cell.getValue()).append("\t");
-            }
-            sb.append("\n");
-        }
-
-        return sb.toString();
-    }
-
     /*
         Requerimientos pendientes:
             
@@ -163,7 +141,7 @@ public class DataFrame {
     private List<Label> generateColumnLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
         int nCols = rows.get(0).size();
         List<Label> labels = new ArrayList<>();
-        for(int i=0; i<nCols; i++){
+        for(int i=1; i<nCols; i++){
             labels.add(new Label(i));
         }
         return labels;
@@ -171,7 +149,7 @@ public class DataFrame {
 
     private List<Label> generateRowLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
         List<Label> labels = new ArrayList<>();
-        for(int i=0; i<rows.size(); i++){
+        for(int i=1; i<rows.size(); i++){
             labels.add(new Label(i));
         }
         return labels;
@@ -205,11 +183,7 @@ public class DataFrame {
         //Se recorre cada columna para generar las filas, esta vez las filas son listas que guardan la referencia a las celdas
         
         for (int i = 0; i < rowLabels.size(); i++) {
-            List<Cell> cellList = new ArrayList<>();
-            for (Column column : columns) {
-                cellList.add(column.getCell(i));
-            }
-            this.rows.add(new Row(rowLabels.get(i), cellList));
+            this.rows.add(new Row(rowLabels.get(i),i));
         }
     }
 
@@ -237,16 +211,29 @@ public class DataFrame {
 
     public void head(int n){
         int i = 0;
+        int k = 0;
         String headers = "";
         for(Column c:columns){
             headers += "| "+c.getLabel().toString()+" | ";
         }
         System.out.println(headers);
-        for (Row row : rows){
-            if(i ==n){break;}
-            System.out.println(row);
-            i++;
+
+        for(Row row: rows){
+            if(k==rows.size()){break;}
+            int j = row.getIndex();
+            Label l = rows.get(k).getLabel();
+            List<Cell> rowList = buildRow(k);
+            System.out.println(l.toString()+": " + rowList.toString());
+            k++;
+        } 
+    }
+
+    private List<Cell> buildRow(int i){
+        List<Cell> row = new ArrayList<>();
+        for (Column c : columns){
+            row.add(c.getCell(i));
         }
+        return row;
     }
 
 

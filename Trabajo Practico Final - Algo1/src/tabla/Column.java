@@ -24,24 +24,39 @@ public class Column<T> {
     public Label<T> getLabel() {
         return this.label;
     }
-    public Cell<T> getCell(int i){
+    public Cell<T> getCell(int i) throws IndexOutOfBoundsException{
+        validarIndice(i);
         return cells.get(i);
     }
     public List<Cell<T>> getCells(){
         return cells;
     }
     public Class<?> getType() {
+
         //Tener en cuenta el caso de qué pasaría si el primer dato es NA
         if (this.cells.isEmpty()) {
             return null; // o sería mejor lanzar una excepción?
         }
-        return this.cells.get(0).getClass();
+
+        Object firstValue = cells.get(0).getValue();
+
+        // Si el primer valor es NA, no se puede usar como referencia para el tipo
+        if (firstValue instanceof MissingValue) {
+            // Buscar el primer valor no NA como referencia de tipo
+            for (Cell<T> c : cells) {
+                if (!(c.getValue() instanceof MissingValue)) {
+                    return c.getValue().getClass();
+                }
+            }
+            return null;
+            }
+
+        return firstValue.getClass();
     }
 
     //Setters
 
     public void setLabel(Label<T> label){
-        //Tener en cuenta si se agrega un tipo de dato NA
         this.label=label;
     }
 
@@ -61,6 +76,26 @@ public class Column<T> {
 
     public int size(){
         return cells.size();
+    }
+
+    public void setCell(int i, T value) throws IndexOutOfBoundsException, InvalidTypeException, IllegalStateException{
+
+        //Comprobar que i esté dentro del tamaño de la lista
+        validarIndice(i);
+
+        //Permitir que sea de tipo NA
+        if(value instanceof MissingValue){
+            cells.get(i).setValue(value);
+            return;
+        }
+        //Comprobar si T coincide con el tipo de la columna
+        if (!value.getClass().equals(this.getType())){
+            throw new InvalidTypeException();
+        }
+        if (this.getType() == null) {
+            throw new IllegalStateException("El tipo de la columna no ha sido definido.");
+        }
+        cells.get(i).setValue(value);
     }
 
 
@@ -96,5 +131,9 @@ public class Column<T> {
 
         return value != null && value.getClass().equals(firstValue.getClass());
     }
-
+    private void validarIndice(int i){
+        if (i < 0 || i >= cells.size()) {
+            throw new IndexOutOfBoundsException("Índice fuera del rango: " + i);
+    }
+    }
 }

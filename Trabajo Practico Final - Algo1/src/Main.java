@@ -66,6 +66,8 @@ public class Main {
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
 
+
+
         /*Test unitarios recomendados:
 
             CSV con y sin headers.

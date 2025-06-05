@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
-import exceptions.InvalidShape;
+import exceptions.*;
 
 public class DataFrame {
 
@@ -20,7 +20,7 @@ public class DataFrame {
     }
 
     // Constructor desde matriz 2D
-    public DataFrame(Object[][] array2D, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException {
+    public DataFrame(Object[][] array2D, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object[] row : array2D) {
@@ -34,7 +34,7 @@ public class DataFrame {
     }
 
     // Constructor desde lista de listas 
-    public DataFrame(List<? extends List<?>> data, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException {
+    public DataFrame(List<? extends List<?>> data, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
         this();
 
         List<Label> labelsC = adaptarLabels(columnLabels);
@@ -44,7 +44,7 @@ public class DataFrame {
     }
 
     // Constructor desde una sola columna
-    public DataFrame(List<Object> columnData, Object columnLabel, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException {
+    public DataFrame(List<Object> columnData, Object columnLabel, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object value : columnData) {
@@ -60,7 +60,7 @@ public class DataFrame {
     }
     /* 
     // Constructor desde un mapa de columnas
-    public DataFrame(Map<String, List<Object>> columnMap, List<Object> rowLabels) throws InvalidShape {
+    public DataFrame(Map<String, List<Object>> columnMap, List<Object> rowLabels) throws InvalidShape, InvalidTypeException {
         this();
         int rowCount = columnMap.values().iterator().next().size(); // asume columnas uniformes
         List<Object> labels = new ArrayList<>(columnMap.keySet());
@@ -83,22 +83,11 @@ public class DataFrame {
 
     /*
         Requerimientos pendientes:
-            
-        -Debe existir un valor especial que haga referencia a valores faltantes (N/A).
-        -Una etiqueta (label) puede ser en formato numérico entero o cadena.
         -Dos columnas no pueden tener el mismo nombre. En caso contrario, tirar una excepción.
-        -El dataFrame puede generarse a partir de un CSV: La idea es que el constructor convierta un .csv en
-         una lista de listas que se pueda pasar como argumento a la función generateDataFrame.
-
-        Cosas a corregir:
-        -Modificar validateRows: determinar si es mejor que todas las rows sean del mismo tamaño
-        o permitir que sean de tamaños distintos y que los datos que no tienen las filas
-        más cortas sean completados por N/A
-        - Pasar a columnLabels el numero de columnas como atributo
         */
 
     // Método interno para poblar el dataframe
-    private void generarDataFrame(List<? extends List<?>> rows, List<Label> columnLabels, List<Label> rowLabels) throws InvalidShape {
+    private void generarDataFrame(List<? extends List<?>> rows, List<Label> columnLabels, List<Label> rowLabels) throws InvalidShape, InvalidTypeException {
         //Verifica que todas las listas dentro de rows tengan el mismo tamaño
         validateRowSize(rows);
 
@@ -141,21 +130,21 @@ public class DataFrame {
     private List<Label> generateColumnLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
         int nCols = rows.get(0).size();
         List<Label> labels = new ArrayList<>();
-        for(int i=1; i<nCols; i++){
-            labels.add(new Label(i));
+        for(int i=0; i<nCols; i++){
+            labels.add(new Label(i+1));
         }
         return labels;
     }
 
     private List<Label> generateRowLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
         List<Label> labels = new ArrayList<>();
-        for(int i=1; i<rows.size(); i++){
-            labels.add(new Label(i));
+        for(int i=0; i<rows.size(); i++){
+            labels.add(new Label(i+1));
         }
         return labels;
     }
 
-    private void fillColumns(List<? extends List<?>> rows, List<Label> columnLabels){
+    private void fillColumns(List<? extends List<?>> rows, List<Label> columnLabels)throws InvalidTypeException{
         for (int i = 0; i < columnLabels.size(); i++) {
             Label label = columnLabels.get(i);
             Column column = new Column(label);
@@ -164,14 +153,14 @@ public class DataFrame {
             for (List<?> row : rows) {
                 Object value = row.get(i);
                 if (value == null || value.toString().equalsIgnoreCase("N/A")) {
-                    column.addCell(new Cell(DataFrame.NA)); // valores faltantes tratados como null
+                    column.addCell(new Cell(new MissingValue())); // valores faltantes tratados como null
                     continue;
                 }
 
                 if (!(value instanceof Number || value instanceof Boolean || value instanceof String)) {
                     throw new IllegalArgumentException("Tipo no soportado en la columna '" + label + "': " + value.getClass());
                 }
-
+                
                 column.addCell(new Cell(value));
             }
             columns.add(column);
@@ -180,8 +169,6 @@ public class DataFrame {
 
 
     private void fillRows(List<Label> rowLabels){
-        //Se recorre cada columna para generar las filas, esta vez las filas son listas que guardan la referencia a las celdas
-        
         for (int i = 0; i < rowLabels.size(); i++) {
             this.rows.add(new Row(rowLabels.get(i),i));
         }
@@ -219,7 +206,7 @@ public class DataFrame {
         System.out.println(headers);
 
         for(Row row: rows){
-            if(k==rows.size()){break;}
+            if(k==n){break;}
             int j = row.getIndex();
             Label l = rows.get(k).getLabel();
             List<Cell> rowList = buildRow(k);

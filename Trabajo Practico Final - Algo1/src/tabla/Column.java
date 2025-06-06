@@ -98,6 +98,15 @@ public class Column<T> {
         cells.get(i).setValue(value);
     }
 
+    public int countNA(){
+        int i=0;
+        for (Cell c:cells){
+            if (c.getValue() instanceof MissingValue){
+                i++;
+            }
+        }
+        return i;
+    }
 
     private boolean validarTipo(Cell<T> cell) {
         Object value = cell.getValue();

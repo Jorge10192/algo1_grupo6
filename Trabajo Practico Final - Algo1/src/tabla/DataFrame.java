@@ -131,7 +131,7 @@ public class DataFrame {
         int nCols = rows.get(0).size();
         List<Label> labels = new ArrayList<>();
         for(int i=0; i<nCols; i++){
-            labels.add(new Label(i+1));
+            labels.add(new Label(i));
         }
         return labels;
     }
@@ -139,7 +139,7 @@ public class DataFrame {
     private List<Label> generateRowLabels(List<? extends List<?>> rows){//argumento puede ser de tipo int: expectedSize
         List<Label> labels = new ArrayList<>();
         for(int i=0; i<rows.size(); i++){
-            labels.add(new Label(i+1));
+            labels.add(new Label(i));
         }
         return labels;
     }
@@ -222,6 +222,63 @@ public class DataFrame {
         }
         return row;
     }
+
+    public int contarColumnas(){
+        if(columns==null){
+            return 0;
+        }
+        return columns.size(); 
+    }
+
+    public int contarFilas(){
+        if(rows==null){
+            return 0;
+        }
+        return rows.size();
+    }
+    public void info(){
+
+        System.out.println(" \n" + "Data columns: total "+columns.size());
+
+        for (Column c : columns){
+
+            Label label = c.getLabel();
+            int na = c.countNA();
+            Class<?> tipo =c.getType();
+
+            System.out.println(label + ": "+ (columns.size()-na) + " non-null, "+ tipo);
+        }
+    }
+
+    public List<Cell> obtenerFila(Label label){
+    //Que pasa si la Label no está entre las rows
+    //Admitir valores de tipo int o String, ademas de Label
+    //  
+        int index = 0;      
+        for(Row r : rows){
+            index = buscarFila(label);
+        }
+        Row row = rows.get(index);
+        List<Cell> lista = new ArrayList<>();
+        for(Column c : columns){
+            lista.add(c.getCell(index));
+        }
+        return lista;
+    }
+
+    private int buscarFila(Label label){
+        int i=0;
+        for(Row r: rows){
+            //Sobreescribir equals de Label
+            if (label.equals(r.getLabel())){
+                return i; 
+            }
+            i++;
+        }
+        throw new RuntimeException("");
+    }
+
+
 
 
 

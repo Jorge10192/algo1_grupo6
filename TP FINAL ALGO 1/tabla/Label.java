@@ -14,6 +14,8 @@ public class Label <T>{
     public T getLabel(){
         return value;
     }
+
+
     //Setter
     public void setLabel(T v)throws IllegalArgumentException{
         validarLabel(v);
@@ -30,5 +32,13 @@ public class Label <T>{
     public String toString(){
         return value.toString();
     }
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
 
+        Label<?> otherLabel = (Label<?>) other;
+
+        return value.equals(otherLabel.value);
+    }
 }

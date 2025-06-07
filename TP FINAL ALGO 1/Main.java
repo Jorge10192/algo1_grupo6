@@ -50,12 +50,16 @@ public class Main {
         labels.add("C");
 
         DataFrame df1 = new DataFrame(lista, labels, labels);
-        df1.head(5);
+        df1.head(3);
         
         CSVParser csvParser = new CSVParser();
         try{
-            DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv");
+            DataFrame df2 = csvParser.toDataFrame("/home/tareas/algo1_grupo6/Trabajo Practico Final - Algo1/prueba2.csv");
             df2.head(5);
+            System.out.println("La cantidad de filas es: " + df2.contarColumnas());
+            System.out.println("La cantidad de filas es: " + df2.contarFilas());
+            df2.info();
+            System.out.println(df2.obtenerFila(new Label(3)));
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
@@ -65,6 +69,8 @@ public class Main {
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
+
+
 
         /*Test unitarios recomendados:
 

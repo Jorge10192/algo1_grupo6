@@ -60,7 +60,7 @@ public class CSVParser {
 
     //Comportamiento
 
-    public DataFrame toDataFrame(String path) throws IOException, CSVParserException, InvalidShape{
+    public DataFrame toDataFrame(String path) throws IOException, CSVParserException, InvalidShape,InvalidTypeException{
 
         File file = new File(path);
             if (!file.exists() || !file.canRead()) {

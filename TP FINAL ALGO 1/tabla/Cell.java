@@ -16,7 +16,7 @@ public class Cell<T>{
     }
 
     //Metodos
-    public Object getValue() {
+    public T getValue() {
         return this.content;
     }
     public void setValue(T content){

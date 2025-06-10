@@ -19,6 +19,15 @@ public class Column<T> {
         this.cells = cells;
     }
 
+    // Constructor copia con copia profunda
+    public Column(Column<T> other) {
+        this.label = new Label<>(other.label); 
+        this.cells = new ArrayList<>();
+        for (Cell<T> cell : other.cells) {
+            this.cells.add(new Cell<>(cell)); 
+        }
+    }
+
     //Getters
 
     public Label<T> getLabel() {

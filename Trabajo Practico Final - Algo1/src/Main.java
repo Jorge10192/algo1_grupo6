@@ -59,6 +59,8 @@ public class Main {
             System.out.println("");
             df2.head(5);
             System.out.println("");
+            df2.tail(5);
+            System.out.println("");
             System.out.println("La cantidad de columnas es: " + df2.contarColumnas());
             System.out.println("");
             System.out.println("La cantidad de filas es: " + df2.contarFilas());
@@ -66,6 +68,10 @@ public class Main {
             df2.info();
             System.out.println("");
             System.out.println(df2.obtenerFila(new Label(3)));
+
+            DataFrame df4 = new DataFrame(df2);
+            System.out.println("DataFrame 3");
+            df4.head(5);
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
@@ -76,6 +82,7 @@ public class Main {
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
 
+        
 
 
         /*Test unitarios recomendados:

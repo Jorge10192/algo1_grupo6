@@ -9,6 +9,10 @@ public class Label <T>{
     public Label (T v) throws IllegalArgumentException{
         validarLabel(v);
     }
+    // Constructor copia
+    public Label(Label<T> other) throws IllegalArgumentException {
+        validarLabel(other.value);
+    }
 
     //Getter
     public T getLabel(){
@@ -38,5 +42,10 @@ public class Label <T>{
         Label<?> otherLabel = (Label<?>) other;
 
         return value.equals(otherLabel.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value != null ? value.hashCode() : 0;
     }
 }

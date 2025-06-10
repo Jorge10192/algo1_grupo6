@@ -3,7 +3,10 @@ package tabla;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 import exceptions.*;
 
 public class DataFrame {
@@ -78,16 +81,26 @@ public class DataFrame {
 
     // Constructor copia
     public DataFrame(DataFrame other) {
-        // Implementación: copiar columnas, celdas y filas según la lógica deseada (profunda o superficial)
-    }
 
-    /*
-        Requerimientos pendientes:
-        -Dos columnas no pueden tener el mismo nombre. En caso contrario, tirar una excepción.
-        */
+        // Copia profunda
+        
+        this.columns = new ArrayList<>();
+        this.rows = new ArrayList<>();
+
+        for (Column col : other.columns) {
+            this.columns.add(new Column(col)); 
+        }
+
+        for (Row row : other.rows) {
+            this.rows.add(new Row(row)); 
+        }
+    }
+        
+    
+
 
     // Método interno para poblar el dataframe
-    private void generarDataFrame(List<? extends List<?>> rows, List<Label> columnLabels, List<Label> rowLabels) throws InvalidShape, InvalidTypeException {
+    private void generarDataFrame(List<? extends List<?>> rows, List<Label> columnLabels, List<Label> rowLabels) throws InvalidShape, InvalidTypeException, IllegalArgumentException {
         //Verifica que todas las listas dentro de rows tengan el mismo tamaño
         validateRowSize(rows);
 
@@ -104,6 +117,9 @@ public class DataFrame {
         if(rowLabels == null || rowLabels.isEmpty()){
             rowLabels = generateRowLabels(rows);
         }
+        //Evita que dos Labels sean iguales
+        validarLabelsUnicos(columnLabels);
+        validarLabelsUnicos(rowLabels);
         
         fillColumns(rows, columnLabels);
         fillRows(rowLabels);
@@ -144,12 +160,25 @@ public class DataFrame {
         return labels;
     }
 
+    private static void validarLabelsUnicos(List<Label> labels) throws IllegalArgumentException {
+
+        Set<Object> valoresVistos = new HashSet<>();
+
+        for (Label<?> label : labels) {
+            Object valor = label.getLabel();
+            if (!valoresVistos.add(valor)) {
+                throw new IllegalArgumentException("No pueden haber dos labels con el mismo nombre: " + valor);
+            }
+        }
+    }
+    
+
     private void fillColumns(List<? extends List<?>> rows, List<Label> columnLabels)throws InvalidTypeException{
         for (int i = 0; i < columnLabels.size(); i++) {
             Label label = columnLabels.get(i);
             Column column = new Column(label);
 
-            //Class<?> columnType = null;
+            
             for (List<?> row : rows) {
                 Object value = row.get(i);
                 if (value == null || value.toString().equalsIgnoreCase("N/A")) {
@@ -195,25 +224,6 @@ public class DataFrame {
             return "N/A";
         }
     };
-    /* 
-    public void head(int n){
-        int i = 0;
-        int k = 0;
-        String headers = "";
-        for(Column c:columns){
-            headers += "| "+c.getLabel().toString()+" | ";
-        }
-        System.out.println(headers);
-
-        for(Row row: rows){
-            if(k==n){break;}
-            int j = row.getIndex();
-            Label l = rows.get(k).getLabel();
-            List<Cell> rowList = buildRow(k);
-            System.out.println(l.toString()+": " + rowList.toString());
-            k++;
-        } 
-    }*/
 
     public void head(int n){
         
@@ -237,6 +247,32 @@ public class DataFrame {
         DataFrameView tabla = new DataFrameView();
         System.out.println(tabla.formatTable(ListOfRows, rowLabels, colLabels));
     }
+
+    public void tail(int n) {
+        
+        int totalRows = rows.size();
+        int start = Math.max(0, totalRows - n); // En caso de que n > totalRows
+        
+        List<Label> colLabels = new ArrayList<>();
+        List<Label> rowLabels = new ArrayList<>();
+        List<List<Cell>> listOfRows = new ArrayList<>();
+
+        for (Column c : columns) {
+            colLabels.add(c.getLabel());
+        }
+
+        for (int i = start; i < totalRows; i++) {
+            Row row = rows.get(i);
+            int j = row.getIndex();
+            rowLabels.add(row.getLabel());
+            List<Cell> rowList = buildRow(j);
+            listOfRows.add(rowList);
+        }
+
+        DataFrameView tabla = new DataFrameView();
+        System.out.println(tabla.formatTable(listOfRows, rowLabels, colLabels));
+    }
+
 
     private List<Cell> buildRow(int i){
         List<Cell> row = new ArrayList<>();

@@ -14,7 +14,11 @@ public class Row {
         this.label = label;
         this.index = index;
     }
-
+    // Constructor copias
+    public Row(Row other) {
+        this.label = new Label(other.label);
+        this.index = other.index;
+    }
     //Getters
 
     public Label getLabel(){

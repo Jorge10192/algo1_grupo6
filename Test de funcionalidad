@@ -1,0 +1,55 @@
+Pruebas de implementacion del TP:
+
+##############################################
+#### Prueba 1: Construccion del DataFrame ####
+##############################################
+
+Prueba 1.1: DF1 --> Armar un DataFrame desde CSV con encabezado
+Prueba 1.2: DF2 --> Armar un DataFrame desde CSV sin encabezado y con valores faltantes (ultimo valor de una fila y primer valor de otra fila)
+
+Prueba 1.3: DF3 --> Armar un DataFrame de una sola columna con valores faltantes
+
+Prueba 1.4: DF4 --> Armar un DataFrame desde una Lista de Lista con Labels de columnas y filas.
+Prueba 1.5: DF5 --> Armar un DataFrame desde una Lista de Lista sin Labels de columnas y sin Lables de filas.
+
+Prueba 1.6: DF6 --> Armar un DataFrame desde una matriz 2D con Labels de Filas, sin Labels de Columnas.
+
+Prueba 1.7: DF7 --> Armar DataFrame con 1 sola columna (1 lista sola)
+
+Prueba 1.8: DF8 --> Armar un DataFrame a partir de seleccionar la mitad derecha y mitad inferior del DF 1.
+
+
+
+##################################
+#### Prueba 2: TIPOS DE DATOS ####
+##################################
+
+Prueba 2.1: Para todos los DataFrames (DF 1 al 8) devolver info, head(x), tail(x) (x un numero distinto en cada DataFrame)
+
+Prueba 2.2: Elminar 1 fila y 1 columnas completas del DF 1.
+
+Prueba 2.3: Acceder a valores de filas y celdas de DFs que luego van a borrarse. (Posterior a borrarlas se va a acceder de nuevo y controlar que los valores sean distintos)
+
+Prueba 2.4: Eliminar 2 filas no consecutivas del DF 2.
+
+Prueba 2.5: Eliminar 2 columnas no consecutivas tomando la primera del DF 3.
+
+Prueba 2.6: Eliminar 2 filas y 2 columnas del DF 4 no consecutivas, tomando la ultima fila y ultima columna.
+
+Prueba 2.7: Acceder nuevamente a las posiciones borradasen las pruebas 2.4 a 2.6 (Deben ser distintos a los valores de la prueba 2.3)
+
+Prueba 2.8: Insertar una columna nueva en la mitad en DF1. 
+
+Prueba 2.9 : Insertar una columna al principio y una fila al final en DF2.
+
+Prueba 2.10: Modificar valores NA de DF3, dejando un valor NA disponible. Acceder a los valores modificados y al valor NA dejado.
+
+Prueba 2.11: Crear una nueva columna en DF4 al principio con todos valores NA y label a eleccion.
+
+Prueba 2.12: Crear una fila con todos valores NA en DF 5 al final.
+
+Prueba 2.13: De todos los dataframes editados devolver info, head(x), tail(x). Siendo el mismo x, compatible con el x de la prueba 2.1
+
+Prueba 2.14: Eliminar los valores NA de DF4 y DF5.
+
+

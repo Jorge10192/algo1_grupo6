@@ -195,7 +195,7 @@ public class DataFrame {
             return "N/A";
         }
     };
-
+    /* 
     public void head(int n){
         int i = 0;
         int k = 0;
@@ -213,6 +213,29 @@ public class DataFrame {
             System.out.println(l.toString()+": " + rowList.toString());
             k++;
         } 
+    }*/
+
+    public void head(int n){
+        
+        int k = 0;
+        List<Label> colLabels = new ArrayList<>();
+        List<Label> rowLabels = new ArrayList<>();
+        List<List<Cell>> ListOfRows = new ArrayList<>();
+
+        for(Column c:columns){
+            colLabels.add(c.getLabel());
+        }
+        for(Row row: rows){
+           if(k==n){break;}
+            int j = row.getIndex();
+            rowLabels.add(rows.get(k).getLabel());
+            List<Cell> rowList = buildRow(j);
+            ListOfRows.add(rowList);
+            k++;
+        }
+
+        DataFrameView tabla = new DataFrameView();
+        System.out.println(tabla.formatTable(ListOfRows, rowLabels, colLabels));
     }
 
     private List<Cell> buildRow(int i){

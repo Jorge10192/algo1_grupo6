@@ -18,7 +18,7 @@ public class Main {
     //Clase de java que permite registrar mensaje durante la ejecucion de un programa.
     //private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) throws InvalidShape {
-
+        
         //Ejemplo de creacion de un DataFrame interno en JAVA
         List<List<Object>> lista = new ArrayList<>();
 
@@ -52,13 +52,19 @@ public class Main {
         DataFrame df1 = new DataFrame(lista, labels, labels);
         df1.head(5);
         
+
         CSVParser csvParser = new CSVParser();
         try{
-            DataFrame df2 = csvParser.toDataFrame("/home/tareas/algo1_grupo6/Trabajo Practico Final - Algo1/prueba2.csv");
+            DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv");
+            System.out.println("");
             df2.head(5);
-            System.out.println("La cantidad de filas es: " + df2.contarColumnas());
+            System.out.println("");
+            System.out.println("La cantidad de columnas es: " + df2.contarColumnas());
+            System.out.println("");
             System.out.println("La cantidad de filas es: " + df2.contarFilas());
+            System.out.println("");
             df2.info();
+            System.out.println("");
             System.out.println(df2.obtenerFila(new Label(3)));
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;

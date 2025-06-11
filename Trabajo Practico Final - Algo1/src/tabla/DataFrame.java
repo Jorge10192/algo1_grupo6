@@ -438,4 +438,8 @@ public class DataFrame {
    public DataFrame filter(Map<Object, Predicate<Object>> conditions){
         return handler.filter(conditions);
    }
+
+   public DataFrame sortBy(List<? extends Object> labels, boolean descending){
+    return handler.sortBy(labels, descending);
+   }
 }

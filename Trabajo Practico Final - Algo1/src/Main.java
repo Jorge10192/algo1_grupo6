@@ -88,6 +88,10 @@ public class Main {
             DataFrame dfFiltrado = df2.filter(condiciones);
             dfFiltrado.head(5);
 
+            List<Object> lista_labels_2 = new ArrayList<>();
+            lista_labels_2.add("Nombre");
+            df2.sortBy(lista_labels_2, false).head(5);
+
             
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;

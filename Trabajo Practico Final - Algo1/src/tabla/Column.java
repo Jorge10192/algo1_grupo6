@@ -154,4 +154,30 @@ public class Column<T> {
             throw new IndexOutOfBoundsException("Índice fuera del rango: " + i);
     }
     }
+
+    
+    public boolean matches(Object obj) {
+        if (this == obj) return true; // Son la misma referencia
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Column<?> other = (Column<?>) obj;
+
+        // Comparo las etiquetas
+        if (this.label == null) {
+            if (other.label != null) return false;
+        } else if (!this.label.equals(other.label)) {
+            return false;
+        }
+
+        // Comparo tipo de datos
+        Class<?> thisType = this.getType();
+        Class<?> otherType = other.getType();
+
+        if (thisType == null) {
+            return otherType == null;
+        }
+
+        return thisType.equals(otherType);
+    }
+
 }

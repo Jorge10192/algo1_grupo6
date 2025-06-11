@@ -209,7 +209,7 @@ public class DataFrame {
                     continue;
                 }
 
-                if (!(value instanceof Number || value instanceof Boolean || value instanceof String)) {
+                if (!(value instanceof Number || value instanceof Boolean || value instanceof String || value instanceof Cell)) {
                     throw new IllegalArgumentException("Tipo no soportado en la columna '" + label + "': " + value.getClass());
                 }
                 
@@ -435,11 +435,25 @@ public class DataFrame {
 
     }
 
+    //Copia
+    public DataFrame copy(){
+        return new DataFrame(this);
+    }
+
+    //Filtrado
+
    public DataFrame filter(Map<Object, Predicate<Object>> conditions){
         return handler.filter(conditions);
    }
 
+   //Ordenamiento
+
    public DataFrame sortBy(List<? extends Object> labels, boolean descending){
-    return handler.sortBy(labels, descending);
+        return handler.sortBy(labels, descending);
+   }
+
+   //Concatenación
+   public DataFrame concatenar(DataFrame other){
+        return handler.concatenar(other);
    }
 }

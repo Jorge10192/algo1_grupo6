@@ -137,4 +137,45 @@ public class DataFrameHandler {
                 throw new RuntimeException("Error al construir el DataFrame ordenado: " + e.getMessage(), e);
             }
     }
+
+    public DataFrame concatenar(DataFrame other){
+
+        //Chequear si la cantidad de columnas coinciden
+        
+        if(df.contarColumnas() != other.contarColumnas()){
+            throw new InvalidShape("No se pueden concatenar los data-frames. La cantidad de columnas de ambos es distinta");
+        }
+
+        //Chequear si los Labels coinciden y tipos de datos coinciden
+        for (int i =0; i < df.contarColumnas();i++){
+            Column col1 = df.getColumns().get(i);
+            Column col2 = other.getColumns().get(i);
+
+            if(!col1.matches(col2)){
+                throw new RuntimeException("Las columnas de ambas tablas no coinciden en Label o en tipo de dato");
+            }
+        }
+        System.out.println("Checkpoint 1");
+        //Copiar las estructuras originales
+        DataFrame df1 = df.copy();
+        DataFrame df2 = other.copy();
+        
+        List<List<Cell>> data = new ArrayList<>();
+
+        System.out.println("Checkpoint 2");
+        for (Row r:df1.getRows()){
+            data.add(df1.buildRow(r.getIndex(),df1.getColumns()));
+        }
+        System.out.println("Checkpoint 3");
+        for (Row r:df2.getRows()){
+            data.add(df2.buildRow(r.getIndex(),df2.getColumns()));
+        }
+        System.out.println("Checkpoint 4");
+        // Extraer etiquetas de columnas
+            List<Object> columnLabels = df1.getColumns().stream()
+                                            .map(c -> c.getLabel().getLabel())
+                                            .collect(Collectors.toList());
+        
+        return new DataFrame(data,columnLabels,null);
+    }
 }

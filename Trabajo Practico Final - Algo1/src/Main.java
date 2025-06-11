@@ -72,6 +72,13 @@ public class Main {
             DataFrame df4 = new DataFrame(df2);
             System.out.println("DataFrame 3");
             df4.head(5);
+
+            //Lista de labels
+            List<Object> lista_labels = new ArrayList<>();
+            lista_labels.add("Nombre");
+            lista_labels.add("Apellido");
+            df2.slice(lista_labels,null);
+            
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }

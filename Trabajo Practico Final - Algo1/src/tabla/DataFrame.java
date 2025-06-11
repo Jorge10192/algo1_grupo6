@@ -11,15 +11,19 @@ import exceptions.*;
 
 public class DataFrame {
 
+    // --- 0. atributos ---
+
     private List<Column> columns;
-    private List<Row> rows; 
-    //Map<Label, Integer> rows el integer va a ser el indice de la fila  
-    
+    private List<Row> rows;
+    private DataFrameHandler handler;
+      
+    // --- 1.0 Constructores ---
 
     // Constructor por defecto
     public DataFrame() {
         this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
+        this.handler = new DataFrameHandler(this);
     }
 
     // Constructor desde matriz 2D
@@ -95,8 +99,26 @@ public class DataFrame {
             this.rows.add(new Row(row)); 
         }
     }
+
+    // --- 0.1 Metodos auxiliares de constructores ---
+
+    private List<Label> adaptarLabels(List<?> labels) throws IllegalArgumentException{
         
+        List<Label> aux = new ArrayList<>();
+
+        if (labels == null || labels.isEmpty()) {
+            return aux; // Devuelve lista vacía
+        }
+
+        for (Object l:labels){
+            Label label = new Label(l);
+            aux.add(label);
+        }
+        return aux;
+    }
+      
     
+    // --- 1.1 Metodos auxiliares de generaDataFrame ---
 
 
     // Método interno para poblar el dataframe
@@ -203,20 +225,7 @@ public class DataFrame {
         }
     }
 
-    private List<Label> adaptarLabels(List<?> labels) throws IllegalArgumentException{
-        
-        List<Label> aux = new ArrayList<>();
 
-        if (labels == null || labels.isEmpty()) {
-            return aux; // Devuelve lista vacía
-        }
-
-        for (Object l:labels){
-            Label label = new Label(l);
-            aux.add(label);
-        }
-        return aux;
-    }
 
     public static final Object NA = new Object() {
     @Override
@@ -224,6 +233,43 @@ public class DataFrame {
             return "N/A";
         }
     };
+
+    //--- 2.0 Getters ---
+
+    public List<Column> getColumns(){
+        return columns;
+    }
+    public List<Row> getRows(){
+        return rows;
+    }
+    public int contarColumnas(){
+        if(columns==null){
+            return 0;
+        }
+        return columns.size(); 
+    }
+    public int contarFilas(){
+        if(rows==null){
+            return 0;
+        }
+        return rows.size();
+    }
+    public List<Label> getColumnLabels(){
+        List<Label> lista = new ArrayList<>();
+        for(Column c: columns){
+            lista.add(c.getLabel());
+        }
+        return lista;
+    }
+    public List<Label> getRowLabels(){
+        List<Label> lista = new ArrayList<>();
+        for(Row r: rows){
+            lista.add(r.getLabel());
+        }
+        return lista;  
+    }
+
+    // --- 3.0 Metodos de Visualización ---
 
     public void head(int n){
         
@@ -239,7 +285,7 @@ public class DataFrame {
            if(k==n){break;}
             int j = row.getIndex();
             rowLabels.add(rows.get(k).getLabel());
-            List<Cell> rowList = buildRow(j);
+            List<Cell> rowList = buildRow(j,columns);
             ListOfRows.add(rowList);
             k++;
         }
@@ -265,7 +311,7 @@ public class DataFrame {
             Row row = rows.get(i);
             int j = row.getIndex();
             rowLabels.add(row.getLabel());
-            List<Cell> rowList = buildRow(j);
+            List<Cell> rowList = buildRow(j,columns);
             listOfRows.add(rowList);
         }
 
@@ -273,28 +319,6 @@ public class DataFrame {
         System.out.println(tabla.formatTable(listOfRows, rowLabels, colLabels));
     }
 
-
-    private List<Cell> buildRow(int i){
-        List<Cell> row = new ArrayList<>();
-        for (Column c : columns){
-            row.add(c.getCell(i));
-        }
-        return row;
-    }
-
-    public int contarColumnas(){
-        if(columns==null){
-            return 0;
-        }
-        return columns.size(); 
-    }
-
-    public int contarFilas(){
-        if(rows==null){
-            return 0;
-        }
-        return rows.size();
-    }
     public void info(){
 
         System.out.println(" \n" + "Data columns: total "+columns.size());
@@ -309,37 +333,104 @@ public class DataFrame {
         }
     }
 
-    public List<Cell> obtenerFila(Label label){
-    //Que pasa si la Label no está entre las rows
-    //Admitir valores de tipo int o String, ademas de Label
-    //  
-        int index = 0;      
-        for(Row r : rows){
-            index = buscarFila(label);
+    // --- 3.1 Metodos auxiliares de Visualización ---
+    
+    private List<Cell> buildRow(int i, List<Column> list){
+        List<Cell> row = new ArrayList<>();
+        for (Column c : list){
+            row.add(c.getCell(i));
         }
-        Row row = rows.get(index);
-        List<Cell> lista = new ArrayList<>();
-        for(Column c : columns){
-            lista.add(c.getCell(index));
-        }
-        return lista;
+        return row;
     }
 
-    private int buscarFila(Label label){
-        int i=0;
-        for(Row r: rows){
-            //Sobreescribir equals de Label
-            if (label.equals(r.getLabel())){
-                return i; 
+
+
+    // --- 4.0 Metodos de selección ---
+
+    public Row obtenerFila(Object input) throws IndexOutOfBoundsException {
+        int index = -1;
+
+        if (input instanceof Label) {
+            index = buscarFila((Label) input);
+        } else if (input instanceof String) {
+            index = buscarFila(new Label((String) input));
+        } else if (input instanceof Integer) {
+            index = (Integer) input;
+            if (index < 0 || index >= rows.size()) {
+                throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
             }
-            i++;
+        } else {
+            throw new IllegalArgumentException("Tipo de argumento no soportado: " + input.getClass());
         }
-        throw new RuntimeException("");
+        return rows.get(index);
     }
 
+    private int buscarFila(Label label) {
+        for (int i = 0; i < rows.size(); i++) {
+            if (label.equals(rows.get(i).getLabel())) {
+                return i;
+            }
+        }
+        throw new IndexOutOfBoundsException("Fila con etiqueta no encontrada: " + label);
+    }
 
+    public Column obtenerColumna(Object input) throws IndexOutOfBoundsException {
+        int index = -1;
 
+        if (input instanceof Label) {
+            index = buscarColumna((Label) input);
+        } else if (input instanceof String) {
+            index = buscarColumna(new Label((String) input));
+        } else if (input instanceof Integer) {
+            index = (Integer) input;
+            if (index < 0 || index >= columns.size()) {
+                throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
+            }
+        } else {
+            throw new IllegalArgumentException("Tipo de argumento no soportado: " + input.getClass());
+        }
 
+        // Obtener la columna y construir la lista de celdas
+        return columns.get(index);
+    }
 
+    private int buscarColumna(Label label) {
+        for (int i = 0; i < columns.size(); i++) {
+            if (label.equals(columns.get(i).getLabel())) {
+                return i;
+            }
+        }
+        throw new IndexOutOfBoundsException("Fila con etiqueta no encontrada: " + label);
+    }
 
+    public void slice(List<?> columnLabels, List<?> rowLabels){
+        
+        List<Column> columnList = new ArrayList<>();
+        List<List<Cell>> rowList = new ArrayList<>();
+        List<Label> cLabels = new ArrayList<>();
+        List<Label> rLabels = new ArrayList<>();
+
+        if(columnLabels==null || columnLabels.isEmpty()){
+            columnLabels = this.getColumnLabels();
+        }
+        if(rowLabels==null || rowLabels.isEmpty() ){
+            rowLabels = this.getRowLabels();  
+        }
+        
+        for (Object l:columnLabels){
+            Column c = obtenerColumna(l);
+            columnList.add(c);
+            cLabels.add(c.getLabel());
+        }
+         
+        for (Object l:rowLabels){
+            Row r = obtenerFila(l);
+            rowList.add(buildRow(r.getIndex(),columnList));
+            rLabels.add(r.getLabel());
+        }
+        
+        DataFrameView tabla = new DataFrameView();
+        System.out.println(tabla.formatTable(rowList, rLabels, cLabels));
+
+    }
 }

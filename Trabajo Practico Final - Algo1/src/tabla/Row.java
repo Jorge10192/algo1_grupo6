@@ -3,9 +3,9 @@ import tabla.Cell;
 
 import java.util.List;
 
-public class Row {
+public class Row<T>{
     //Atributos
-    private Label label;
+    private Label<T> label;
     private int index;
 
     //Constructor
@@ -16,12 +16,12 @@ public class Row {
     }
     // Constructor copias
     public Row(Row other) {
-        this.label = new Label(other.label);
+        this.label = new Label<T>(other.getLabel());
         this.index = other.index;
     }
     //Getters
 
-    public Label getLabel(){
+    public Label<T> getLabel(){
         return label;
     }
     public int getIndex(){

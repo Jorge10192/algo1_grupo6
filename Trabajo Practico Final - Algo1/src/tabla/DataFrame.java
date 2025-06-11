@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.*;
 
 import exceptions.*;
 
@@ -27,7 +28,7 @@ public class DataFrame {
     }
 
     // Constructor desde matriz 2D
-    public DataFrame(Object[][] array2D, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
+    public DataFrame(Object[][] array2D, List<?> columnLabels, List<?> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
         this();
         List<List<Object>> data = new ArrayList<>();
         for (Object[] row : array2D) {
@@ -41,7 +42,7 @@ public class DataFrame {
     }
 
     // Constructor desde lista de listas 
-    public DataFrame(List<? extends List<?>> data, List<Object> columnLabels, List<Object> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
+    public DataFrame(List<? extends List<?>> data, List<?> columnLabels, List<?> rowLabels) throws InvalidShape, IllegalArgumentException,InvalidTypeException {
         this();
 
         List<Label> labelsC = adaptarLabels(columnLabels);
@@ -111,7 +112,7 @@ public class DataFrame {
         }
 
         for (Object l:labels){
-            Label label = new Label(l);
+            Label label = new Label<>(l);
             aux.add(label);
         }
         return aux;
@@ -335,7 +336,7 @@ public class DataFrame {
 
     // --- 3.1 Metodos auxiliares de Visualización ---
     
-    private List<Cell> buildRow(int i, List<Column> list){
+    protected List<Cell> buildRow(int i, List<Column> list){
         List<Cell> row = new ArrayList<>();
         for (Column c : list){
             row.add(c.getCell(i));
@@ -365,7 +366,7 @@ public class DataFrame {
         return rows.get(index);
     }
 
-    private int buscarFila(Label label) {
+    protected int buscarFila(Label label) {
         for (int i = 0; i < rows.size(); i++) {
             if (label.equals(rows.get(i).getLabel())) {
                 return i;
@@ -394,7 +395,7 @@ public class DataFrame {
         return columns.get(index);
     }
 
-    private int buscarColumna(Label label) {
+    protected int buscarColumna(Label label) {
         for (int i = 0; i < columns.size(); i++) {
             if (label.equals(columns.get(i).getLabel())) {
                 return i;
@@ -433,4 +434,8 @@ public class DataFrame {
         System.out.println(tabla.formatTable(rowList, rLabels, cLabels));
 
     }
+
+   public DataFrame filter(Map<Object, Predicate<Object>> conditions){
+        return handler.filter(conditions);
+   }
 }

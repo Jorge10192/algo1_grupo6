@@ -7,8 +7,11 @@ import exceptions.InvalidShape;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.util.function.*;
 /*
 La clase Logger permite registrar depuraciones y excepciones durante la ejecución, si bien
 no esperaba utilizar esta clase, el compilador lo arrojo como alerta de buena practica.
@@ -78,17 +81,26 @@ public class Main {
             lista_labels.add("Nombre");
             lista_labels.add("Apellido");
             df2.slice(lista_labels,null);
+
+            Map<Object, Predicate<Object>> condiciones = new HashMap<>();
+            condiciones.put("Edad", v -> ((Integer)v) > 24);
+
+            DataFrame dfFiltrado = df2.filter(condiciones);
+            dfFiltrado.head(5);
+
             
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
+        
+        /* 
         try{
             DataFrame df3 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba3.csv");
             df3.head(5);
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }
-
+        */
         
 
 

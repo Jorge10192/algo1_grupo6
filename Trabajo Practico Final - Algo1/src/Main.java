@@ -60,9 +60,9 @@ public class Main {
         try{
             DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv");
             System.out.println("");
-            df2.head(5);
+            df2.head(2);
             System.out.println("");
-            df2.tail(5);
+            df2.tail(2);
             System.out.println("");
             System.out.println("La cantidad de columnas es: " + df2.contarColumnas());
             System.out.println("");

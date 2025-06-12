@@ -155,22 +155,22 @@ public class DataFrameHandler {
                 throw new RuntimeException("Las columnas de ambas tablas no coinciden en Label o en tipo de dato");
             }
         }
-        System.out.println("Checkpoint 1");
+        
         //Copiar las estructuras originales
         DataFrame df1 = df.copy();
         DataFrame df2 = other.copy();
         
         List<List<Cell>> data = new ArrayList<>();
 
-        System.out.println("Checkpoint 2");
+        
         for (Row r:df1.getRows()){
             data.add(df1.buildRow(r.getIndex(),df1.getColumns()));
         }
-        System.out.println("Checkpoint 3");
+        
         for (Row r:df2.getRows()){
             data.add(df2.buildRow(r.getIndex(),df2.getColumns()));
         }
-        System.out.println("Checkpoint 4");
+        
         // Extraer etiquetas de columnas
             List<Object> columnLabels = df1.getColumns().stream()
                                             .map(c -> c.getLabel().getLabel())

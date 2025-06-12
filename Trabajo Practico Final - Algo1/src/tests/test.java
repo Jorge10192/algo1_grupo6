@@ -15,16 +15,12 @@ public class test {
         try{
             DataFrame df1 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba1.csv");
             DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv");
-
+            df1.head(5);
             DataFrame df3 = df1.concatenar(df2);
 
             df3.head(10);
-
-            DataFrame df4 = df3.sample(60);
-            df4.head(10);
-
-            DataFrame df5 = df3.sample(60);
-            df5.head(10);
+            System.out.println("");
+            df3.info();
 
             
         }catch(Exception e){

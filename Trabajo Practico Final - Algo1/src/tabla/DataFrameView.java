@@ -19,7 +19,7 @@ public class DataFrameView {
         this.MAX_CELL_CHARS = MAX_CELL_CHARS;
     }
 
-    public static String formatTable(List<List<Cell>> rows, List<Label> rowLabels, List<Label> columnLabels) {
+    public static String formatTable(List<List<Object>> rows, List<Label> rowLabels, List<Label> columnLabels) {
         StringBuilder sb = new StringBuilder();
 
         int totalRows = Math.min(rows.size(), MAX_ROWS);
@@ -44,7 +44,7 @@ public class DataFrameView {
             sb.append(padRight(rowLabel, MAX_CELL_CHARS));
 
             // Celdas
-            List<Cell> rowCells = rows.get(row);
+            List<Object> rowCells = rows.get(row);
             for (int col = 0; col < totalCols && col < rowCells.size(); col++) {
                 sb.append(padRight(truncate(rowCells.get(col).toString()), MAX_CELL_CHARS));
             }

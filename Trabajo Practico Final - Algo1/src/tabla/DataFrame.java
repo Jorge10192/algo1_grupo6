@@ -313,7 +313,7 @@ public class DataFrame {
         int k = 0;
         List<Label> colLabels = new ArrayList<>();
         List<Label> rowLabels = new ArrayList<>();
-        List<List<Cell>> ListOfRows = new ArrayList<>();
+        List<List<Object>> ListOfRows = new ArrayList<>();
 
         for(Column c:columns){
             colLabels.add(c.getLabel());
@@ -322,7 +322,7 @@ public class DataFrame {
            if(k==n){break;}
             int j = row.getIndex();
             rowLabels.add(rows.get(k).getLabel());
-            List<Cell> rowList = buildRow(j,columns);
+            List<Object> rowList = buildRow(j,columns);
             ListOfRows.add(rowList);
             k++;
         }
@@ -338,7 +338,7 @@ public class DataFrame {
         
         List<Label> colLabels = new ArrayList<>();
         List<Label> rowLabels = new ArrayList<>();
-        List<List<Cell>> listOfRows = new ArrayList<>();
+        List<List<Object>> listOfRows = new ArrayList<>();
 
         for (Column c : columns) {
             colLabels.add(c.getLabel());
@@ -348,7 +348,7 @@ public class DataFrame {
             Row row = rows.get(i);
             int j = row.getIndex();
             rowLabels.add(row.getLabel());
-            List<Cell> rowList = buildRow(j,columns);
+            List<Object> rowList = buildRow(j,columns);
             listOfRows.add(rowList);
         }
 
@@ -358,7 +358,7 @@ public class DataFrame {
 
     public void info(){
 
-        System.out.println(" \n" + "Data columns: total "+columns.size());
+        System.out.println(" \n" + "Data columns: total "+this.columns.size());
 
         for (Column c : columns){
 
@@ -372,10 +372,10 @@ public class DataFrame {
 
     // --- 3.1 Metodos auxiliares de Visualización ---
     
-    protected List<Cell> buildRow(int i, List<Column> list){
-        List<Cell> row = new ArrayList<>();
+    protected List<Object> buildRow(int i, List<Column> list){
+        List<Object> row = new ArrayList<>();
         for (Column c : list){
-            row.add(c.getCell(i));
+            row.add(c.getCell(i).getValue());
         }
         return row;
     }
@@ -443,7 +443,7 @@ public class DataFrame {
     public void slice(List<?> columnLabels, List<?> rowLabels){
         
         List<Column> columnList = new ArrayList<>();
-        List<List<Cell>> rowList = new ArrayList<>();
+        List<List<Object>> rowList = new ArrayList<>();
         List<Label> cLabels = new ArrayList<>();
         List<Label> rLabels = new ArrayList<>();
 
@@ -470,6 +470,27 @@ public class DataFrame {
         System.out.println(tabla.formatTable(rowList, rLabels, cLabels));
 
     }
+
+    //Modificación del DataFrame
+
+    //Modificación de una celda
+    public void setValue(Object rowLabel, Object columnLabel, Object newValue) {
+        int rowIndex = buscarFila(new Label(rowLabel));
+        int colIndex = buscarColumna(new Label(columnLabel));
+
+        Column<?> col = columns.get(colIndex);
+        Class<?> expectedType = col.getType();
+
+        if (newValue != null && !expectedType.isInstance(newValue)) {
+            throw new IllegalArgumentException(
+                "Tipo incompatible: se esperaba " + expectedType.getSimpleName() +
+                " pero se recibió " + newValue.getClass().getSimpleName()
+            );
+        }
+        
+        columns.get(colIndex).getCell(rowIndex).setValue(newValue);
+    }
+
 
     //Copia
     public DataFrame copy(){

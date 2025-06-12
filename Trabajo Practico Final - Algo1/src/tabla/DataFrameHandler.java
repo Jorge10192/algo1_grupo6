@@ -162,7 +162,7 @@ public class DataFrameHandler {
         DataFrame df1 = df.copy();
         DataFrame df2 = other.copy();
         
-        List<List<Cell>> data = new ArrayList<>();
+        List<List<Object>> data = new ArrayList<>();
 
         
         for (Row r:df1.getRows()){
@@ -184,7 +184,7 @@ public class DataFrameHandler {
     public DataFrame sample(int n) throws IllegalArgumentException {
         List<Row> rows = df.getRows();
         List<Column> columns = df.getColumns();
-        List<List<Cell>> data = new ArrayList<>();
+        List<List<Object>> data = new ArrayList<>();
 
         if (n <= 0 || n > 100) {
             throw new IllegalArgumentException(n + " no es un número válido para porcentajes. Escribir únicamente valores entre 1 y 100");
@@ -213,6 +213,19 @@ public class DataFrameHandler {
                 .collect(Collectors.toList());
 
         return new DataFrame(data, columnLabels, null);
+    }
+
+    public <T> DataFrame fillna(Object label, T value){
+        /*
+        DataFrame df1 = this.df.copy();
+        Column<T> column = (Column<T>) df1.getColumn(label);
+        for (Cell<T> cell : column.getCells()) {
+            if (cell.isEmpty()) {
+                cell.setValue(value);
+            }
+        }
+        */
+        return new DataFrame();
     }
 
 }

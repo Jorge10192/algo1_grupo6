@@ -491,6 +491,51 @@ public class DataFrame {
         columns.get(colIndex).getCell(rowIndex).setValue(newValue);
     }
 
+    //Inserción de una columna
+    public void addColumn(Column<?> newColumn) {
+        if (newColumn.getCells().size() != rows.size()) {
+            throw new IllegalArgumentException("La nueva columna no tiene la misma cantidad de filas.");
+        }
+        columns.add(newColumn);
+    }
+
+    //Inserción de una columna a partir de una secuencia lineal de Java
+  
+    public void addColumnFromList(List<?> data, Object label) {
+        if (data.size() != rows.size()) {
+            throw new IllegalArgumentException("La lista no tiene la misma cantidad de filas.");
+        }
+        Column<Object> column = new Column<>(new Label<>(label));
+
+        for (Object value : data) {
+
+            if (value == null || value.toString().equalsIgnoreCase("N/A")) {
+                column.addCell(new Cell(new MissingValue())); // valores faltantes tratados como null
+                continue;
+            }
+
+            if (!(value instanceof Number || value instanceof Boolean || value instanceof String)) {
+                throw new IllegalArgumentException("Tipo no soportado en la columna '" + label + "': " + value.getClass());
+            }   
+            column.addCell(new Cell(value));
+        }
+        columns.add(column);
+    }
+
+    //Eliminación de una columna
+    public void removeColumn(Object columnLabel) {
+        int index = buscarColumna(new Label(columnLabel));
+        columns.remove(index);
+    }
+    //Eliminación de una fila
+    public void removeRow(Object rowLabel) {
+        int index = buscarFila(new Label(rowLabel));
+        rows.remove(index);
+        for (Column<?> col : columns) {
+            col.getCells().remove(index);
+        }
+    }
+
 
     //Copia
     public DataFrame copy(){

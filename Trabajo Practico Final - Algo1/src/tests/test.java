@@ -19,10 +19,11 @@ public class test {
             DataFrame df3 = df1.concatenar(df2);
 
             df3.head(10);
-            System.out.println("");
-            df3.info();
 
-            
+            df3.setValue(2, "Edad", 25);
+
+            df3.head(10);
+
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }

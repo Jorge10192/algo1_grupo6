@@ -66,23 +66,58 @@ public class DataFrame {
 
         generarDataFrame(data, labelsC, labelsR);
     }
-    /* 
+     
     // Constructor desde un mapa de columnas
-    public DataFrame(Map<String, List<Object>> columnMap, List<Object> rowLabels) throws InvalidShape, InvalidTypeException {
+    /**
+     * Constructor que crea un DataFrame a partir de un mapa en el que
+     * las claves son las etiquetas de las columnas y los valores son listas con los datos de cada columna.
+     *
+     * @param dataMap Mapa con claves como etiquetas de columnas y listas de datos por columna.
+     * @throws InvalidShape si las columnas tienen diferentes cantidades de elementos.
+     * @throws IllegalArgumentException si el mapa está vacío o contiene datos nulos.
+     * @throws InvalidTypeException si algún dato no es de tipo soportado.
+     */
+    public DataFrame(Map<Object, List<Object>> dataMap) throws InvalidShape, IllegalArgumentException, InvalidTypeException {
+        //Llama al constructor por defecto
         this();
-        int rowCount = columnMap.values().iterator().next().size(); // asume columnas uniformes
-        List<Object> labels = new ArrayList<>(columnMap.keySet());
-        List<List<Object>> data = new ArrayList<>();
-
-        for (int i = 0; i < rowCount; i++) {
-            List<Object> row = new ArrayList<>();
-            for (Object label : labels) {
-                row.add(columnMap.get(label).get(i));
-            }
-            data.add(row);
+        //Verifica que el mapa no sea nulo o vacío
+        if (dataMap == null || dataMap.isEmpty()) {
+            throw new IllegalArgumentException("El mapa de datos no puede estar vacío.");
         }
-        generarDataFrame(data, labels, rowLabels);
-    }*/
+        // Verifica que las columnas tengan la misma cantidad de elementos y calcula la cantidad de datos por columna.
+        int expectedSize = -1;
+        for (Map.Entry<Object, List<Object>> entry : dataMap.entrySet()) {
+            if (entry.getValue() == null) {
+                throw new IllegalArgumentException("Los datos de una columna no pueden ser nulos.");
+            }
+            if (expectedSize == -1) {
+                expectedSize = entry.getValue().size();
+            } else if (entry.getValue().size() != expectedSize) {
+                throw new InvalidShape("Las columnas no tienen la misma cantidad de filas.");
+            }
+        }
+
+        // Inicializa la firma del constructor DataFrame
+        List<Object> columnLabels = new ArrayList<>(dataMap.keySet()); //Crea las labels de columnas
+        List<Object> rowLabels = new ArrayList<>();
+        List<List<Object>> data = new ArrayList<>();
+        //Crea las labels de filas.
+        for (int i = 0; i < expectedSize; i++) {
+            data.add(new ArrayList<>());
+            rowLabels.add(i);
+        }
+        //Crea la data del DataFrame a partir del mapa.
+        for (Object colLabel : columnLabels) {
+            List<Object> colData = dataMap.get(colLabel);
+            for (int i = 0; i < expectedSize; i++) {
+                data.get(i).add(colData.get(i));
+            }
+        }
+        //Construye el DataFrame con Labels y data.
+        List<Label> labelsC = adaptarLabels(columnLabels);
+        List<Label> labelsR = adaptarLabels(rowLabels);
+        generarDataFrame(data, labelsC, labelsR);
+    }
 
     // Constructor copia
     public DataFrame(DataFrame other) {

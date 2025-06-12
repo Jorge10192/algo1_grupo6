@@ -564,6 +564,29 @@ public class DataFrame {
    public DataFrame sample(int n){
     return handler.sample(n);
    }
+   
+   //Imputación de valores faltantes
+   public void fillna(Object label, Object value){
+        int colIndex = buscarColumna(new Label(label));
+        Column column = columns.get(colIndex);
+
+    Class<?> expectedType = column.getType();
+
+    if (value != null && !expectedType.isInstance(value)) {
+        throw new IllegalArgumentException(
+            "Tipo incompatible: se esperaba " + expectedType.getSimpleName() +
+            " pero se recibió " + value.getClass().getSimpleName()
+        );
+    }
+
+    for (int i=0; i< column.size(); i++) {
+            List<Cell<?>> cellList = column.getCells();
+            Cell celda = cellList.get(i);
+            if (celda.getValue() instanceof MissingValue) {
+                column.getCell(i).setValue(value);
+            }
+    }
     
+   }
     
 }

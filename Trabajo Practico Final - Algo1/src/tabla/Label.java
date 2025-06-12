@@ -24,7 +24,7 @@ public class Label <T>{
     }
     //Comportamiento
     private void validarLabel(T v){
-        if(v instanceof String|| v instanceof Integer){
+        if(v instanceof String || v instanceof Integer){
             this.value = v;
         }else{
             throw new IllegalArgumentException("El label no es válido: solo pueden ser de tipo String o Integer");

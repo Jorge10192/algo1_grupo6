@@ -214,18 +214,34 @@ public class DataFrameHandler {
 
         return new DataFrame(data, columnLabels, null);
     }
-
-    public <T> DataFrame fillna(Object label, T value){
-        /*
+/* 
+    public DataFrame fillna(Object label, Object value){
+        
         DataFrame df1 = this.df.copy();
-        Column<T> column = (Column<T>) df1.getColumn(label);
-        for (Cell<T> cell : column.getCells()) {
-            if (cell.isEmpty()) {
-                cell.setValue(value);
+
+        int colIndex = df1.buscarColumna(new Label(label));
+        Column column = df1.getColumns().get(colIndex);
+
+        Class<?> expectedType = column.getType();
+
+        if (value != null && !expectedType.isInstance(value)) {
+            throw new IllegalArgumentException(
+                "Tipo incompatible: se esperaba " + expectedType.getSimpleName() +
+                " pero se recibió " + value.getClass().getSimpleName()
+            );
+        }
+
+
+        for (int i=0; i< column.size(); i++) {
+            List<Cell<?>> cellList = column.getCells();
+            Cell celda = cellList.get(i);
+            Label row_Label = df1.getRows().get(i).getLabel();
+            if (celda.getValue() instanceof MissingValue) {
+                df1.setValue( row_Label.getLabel(),column.getLabel().getLabel() , value);
             }
         }
-        */
-        return new DataFrame();
-    }
+        
+        return df1;
+    }*/
 
 }

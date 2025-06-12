@@ -24,6 +24,10 @@ public class test {
 
             df3.head(10);
 
+            df3.fillna("Nombre","Tuki");
+
+            df3.head(10);
+
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
         }

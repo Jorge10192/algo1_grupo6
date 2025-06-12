@@ -1,9 +1,11 @@
 package tabla;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
@@ -178,4 +180,39 @@ public class DataFrameHandler {
         
         return new DataFrame(data,columnLabels,null);
     }
+
+    public DataFrame sample(int n) throws IllegalArgumentException {
+        List<Row> rows = df.getRows();
+        List<Column> columns = df.getColumns();
+        List<List<Cell>> data = new ArrayList<>();
+
+        if (n <= 0 || n > 100) {
+            throw new IllegalArgumentException(n + " no es un número válido para porcentajes. Escribir únicamente valores entre 1 y 100");
+        }
+
+        int totalFilas = df.contarFilas();
+        int size = Math.round((n / 100.0f) * totalFilas);
+
+        // Creo la lista de índices para después mezclarla
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < totalFilas; i++) {
+            indices.add(i);
+        }
+        Collections.shuffle(indices);
+
+        // Tomo los primeros índices
+        List<Integer> sampleIndices = indices.subList(0, size);
+
+        for (int j : sampleIndices) {
+            data.add(df.buildRow(rows.get(j).getIndex(), columns));
+        }
+
+        // etiquetas de columnas
+        List<Object> columnLabels = columns.stream()
+                .map(c -> c.getLabel().getLabel())
+                .collect(Collectors.toList());
+
+        return new DataFrame(data, columnLabels, null);
+    }
+
 }

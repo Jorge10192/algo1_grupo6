@@ -20,6 +20,12 @@ public class test {
 
             df3.head(10);
 
+            DataFrame df4 = df3.sample(60);
+            df4.head(10);
+
+            DataFrame df5 = df3.sample(60);
+            df5.head(10);
+
             
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;

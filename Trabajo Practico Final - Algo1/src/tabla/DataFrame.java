@@ -274,10 +274,10 @@ public class DataFrame {
     //--- 2.0 Getters ---
 
     public List<Column> getColumns(){
-        return columns;
+        return new ArrayList<>(columns);
     }
     public List<Row> getRows(){
-        return rows;
+        return new ArrayList<>(rows);
     }
     public int contarColumnas(){
         if(columns==null){
@@ -493,64 +493,11 @@ public class DataFrame {
         return handler.concatenar(other);
    }
 
-    //EJERCICIO DE MUESTREO: Requiere importar la libreria "import java.util.Collections;"
-    //Muestreo: Seleccionar n filas aleatorias del DataFrame (crea un nuevo DataFrame con esa selección)
-    //Estrategia: Armar una lista de indices al azar, usando el n de parametro, y un metodo de mezclar lista de java.
-    //Luego a partir de esa lista de indices y el metodo shuffle, devolver las filas "aleatorias" (dentro de la lista)
-    public DataFrame sample(int n) {
-        // Verifica que n sea un número de filas válido del DataFrame.
-        if (n <= 0 || n > contarFilas()) {
-            throw new IllegalArgumentException("No se pueden tomar " + n + " filas; el DataFrame solo tiene " + contarFilas());
-        }
+   //Sampleo
 
-        // Crear los índices "aleatorios".
-        List<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < contarFilas(); i++) {
-            indices.add(i);
-        }
-        Collections.shuffle(indices); // "Orden aleatorio" de los índices.
-
-        // Creo la data del nuevo DataFrame llamando las filas pedidas de forma aleatoria.
-        List<List<Cell<?>>> nuevasFilas = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            nuevasFilas.add(getFilaComoListaDeCeldas(indices.get(i)));
-        }
-
-        // Genero nuevas etiquetas de fila (por ejemplo, 1, 2, 3, ..., n)
-        List<Label<?>> nuevasRowLabels = generateRowLabels(n);
-
-        // Devuelvo el nuevo DataFrame con los datos seleccionados.
-        return new DataFrame(nuevasFilas, getColumnLabels(), nuevasRowLabels);
-    }
-
-    //Observación: Estos metodos auxiliares deberian estar implementados, como creo que el constructor es distinto
-    //Opte por hacerlos de nuevo para que compile, pero es codigo repetido que hay que modificar en la edicion final.
-    //(Con distinta firma, pero son codigo repetido, estos metodos auxiliares).
-    
-    //Metodo auxiliar 1: Devuelve una fila como lsita de celdas a partir del DataFrame. (Seria un getFila(indice))
-    public List<Cell<?>> getFilaComoListaDeCeldas(int filaIndex) {
-        if (filaIndex < 0 || filaIndex >= contarFilas()) {
-            throw new IndexOutOfBoundsException("Índice de fila fuera de rango: " + filaIndex);
-        }
-
-        List<Cell<?>> fila = new ArrayList<>();
-        for (Column<?> col : columns) {
-            // Obtenemos una referencia a la celda. Podés hacer una copia profunda si querés.
-            fila.add(col.getCell(filaIndex));
-        }
-        return fila;
-    }
-
-    //Metodo auxiliar 2: permite usar n como parametro para crear indices de filas "automaticos".
-    //Esto corresponderia utilizar un constructor sin los rowLabels y que se generen al estilo Pandas.
-    //Similar a lo que hiciste en concatenar DataFrames.
-    private List<Label<?>> generateRowLabels(int n) {
-        List<Label<?>> rowLabels = new ArrayList<>();
-        for (int i = 1; i <= n; i++) {
-            rowLabels.add(new Label<>(i));
-        }
-        return rowLabels;
-    }
+   public DataFrame sample(int n){
+    return handler.sample(n);
+   }
     
     
 }

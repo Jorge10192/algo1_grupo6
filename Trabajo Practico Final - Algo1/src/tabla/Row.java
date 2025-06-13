@@ -27,4 +27,9 @@ public class Row<T>{
     public int getIndex(){
         return index;
     }
+
+    //Setter
+    protected void setIndex(int i){
+        this.index = i;
+    }
 }

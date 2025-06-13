@@ -321,7 +321,7 @@ public class DataFrame {
         for(Row row: rows){
            if(k==n){break;}
             int j = row.getIndex();
-            rowLabels.add(rows.get(k).getLabel());
+            rowLabels.add(row.getLabel());
             List<Object> rowList = buildRow(j,columns);
             ListOfRows.add(rowList);
             k++;
@@ -381,6 +381,7 @@ public class DataFrame {
         for (Column c : list){
             row.add(c.getCell(i).getValue());
         }
+        //System.out.println(i+": "+ row);
         return row;
     }
 
@@ -514,6 +515,10 @@ public class DataFrame {
         rows.remove(index);
         for (Column<?> col : columns) {
             col.getCells().remove(index);
+        }
+        //Reacomodo los indices de las filas
+        for (int i = 0; i<rows.size();i++){
+            rows.get(i).setIndex(i);
         }
     }
 

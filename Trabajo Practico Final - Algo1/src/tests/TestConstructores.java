@@ -28,7 +28,7 @@ public class TestConstructores {
         CSVParser csvParser = new CSVParser();
         //Prueba 1.1
         try{
-            DataFrame df1 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba2.csv");
+            DataFrame df1 = csvParser.toDataFrame(System.getProperty("user.dir").toString()+"/Trabajo Practico Final - Algo1/prueba2.csv");
             df1.head(5);
             df1.info();
         }catch(Exception e){
@@ -39,7 +39,7 @@ public class TestConstructores {
         csvParser.setHasHeaders(false);
         System.out.println("\n Prueba 1.2: DataFrame cargado sin headers \n");
         try{
-            DataFrame df2 = csvParser.toDataFrame("C:/Users/usuario/Downloads/prueba3.csv");
+            DataFrame df2 = csvParser.toDataFrame(System.getProperty("user.dir").toString()+"/Trabajo Practico Final - Algo1/prueba3.csv");
             df2.head(5);
             df2.info();
         }catch(Exception e){
@@ -116,5 +116,7 @@ public class TestConstructores {
         System.out.println("\n Prueba 1.8: DataFrame a partir de otro \n");
         DataFrame df8 = new DataFrame(df3);
         df8.head(5);
+
+        System.out.println("Directorio actual: " + System.getProperty("user.dir"));
     }
 }

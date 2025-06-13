@@ -162,9 +162,9 @@ public class DataFrame {
     private void generarDataFrame(List<? extends List<?>> rows, List<Label> columnLabels, List<Label> rowLabels) throws InvalidShape, InvalidTypeException, IllegalArgumentException {
         //Verifica que todas las listas dentro de rows tengan el mismo tamaño
         validateRowSize(rows);
-
+        
         //Para la lista de filas, se verifica que el largo de cada fila coincida con la cantidad de headers de columnas
-        if(columnLabels!=null){
+        if(!columnLabels.isEmpty()){
             validateRowShape(rows, columnLabels);
         }
 

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TestConstructores",
+            "request": "launch",
+            "mainClass": "tests.TestConstructores",
+            "projectName": "algo1_grupo6_4f6167ce"
+        },
+        {
+            "type": "java",
             "name": "test",
             "request": "launch",
             "mainClass": "tests.test",

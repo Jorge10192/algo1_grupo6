@@ -12,9 +12,45 @@ import java.util.stream.Collectors;
 import exceptions.*;
 
 public class DataFrameHandler {
+    
+    //Atributo
     DataFrame df;
+
+    //Constructor
     DataFrameHandler(DataFrame df){
         this.df =df;
+    }
+
+    //Comportamiento
+    public void slice(List<?> columnLabels, List<?> rowLabels){
+        
+        List<Column> columnList = new ArrayList<>();
+        List<List<Object>> rowList = new ArrayList<>();
+        List<Label> cLabels = new ArrayList<>();
+        List<Label> rLabels = new ArrayList<>();
+
+        if(columnLabels==null || columnLabels.isEmpty()){
+            columnLabels = df.getColumnLabels();
+        }
+        if(rowLabels==null || rowLabels.isEmpty() ){
+            rowLabels = df.getRowLabels();  
+        }
+        
+        for (Object l:columnLabels){
+            Column c = df.obtenerColumna(l);
+            columnList.add(c);
+            cLabels.add(c.getLabel());
+        }
+         
+        for (Object l:rowLabels){
+            Row r = df.obtenerFila(l);
+            rowList.add(df.buildRow(r.getIndex(),columnList));
+            rLabels.add(r.getLabel());
+        }
+        
+        DataFrameView tabla = new DataFrameView();
+        System.out.println(tabla.formatTable(rowList, rLabels, cLabels));
+
     }
 
      /**
@@ -72,14 +108,14 @@ public class DataFrameHandler {
             List<Row> rows = df.getRows();
             List<Column> columns = df.getColumns(); 
 
-            // Obtener los índices de las columnas por las que se quiere ordenar
+            // Obtengo los índices de las columnas por las que quiero ordenar
             List<Integer> columnIndexes = new ArrayList<>();
             for (Object labelObj : labels) {
                 Label label = new Label(labelObj);  // construimos un Label desde el objeto
                 columnIndexes.add(df.buscarColumna(label));
             }
 
-            // Crear lista de pares (índice original, Row) para preservar la referencia a las celdas
+            // Creo la lista de pares (índice original, Row) para preservar la referencia a las celdas
             List<Row> sortedRows = new ArrayList<>(rows);
 
             // Comparador compuesto
@@ -112,10 +148,10 @@ public class DataFrameHandler {
                 return 0;
             };
 
-            // Ordenar
+            // Ordenamiento
             sortedRows.sort(rowComparator);
 
-            // Reconstruir DataFrame con filas ordenadas
+            // Se construye el DataFrame con filas ordenadas
             List<List<Object>> newData = new ArrayList<>();
             List<Object> rowLabels = new ArrayList<>();
 
@@ -128,7 +164,7 @@ public class DataFrameHandler {
                 rowLabels.add(row.getLabel().getLabel());
             }
 
-            // Extraer etiquetas de columnas
+            // Se extraen las etiquetas de columnas
             List<Object> columnLabels = columns.stream()
                                             .map(c -> c.getLabel().getLabel())
                                             .collect(Collectors.toList());
@@ -142,13 +178,13 @@ public class DataFrameHandler {
 
     public DataFrame concatenar(DataFrame other){
 
-        //Chequear si la cantidad de columnas coinciden
+        //Chequeo si la cantidad de columnas coinciden
         
         if(df.contarColumnas() != other.contarColumnas()){
             throw new InvalidShape("No se pueden concatenar los data-frames. La cantidad de columnas de ambos es distinta");
         }
 
-        //Chequear si los Labels coinciden y tipos de datos coinciden
+        //Chequeo si los Labels coinciden y tipos de datos coinciden
         for (int i =0; i < df.contarColumnas();i++){
             Column col1 = df.getColumns().get(i);
             Column col2 = other.getColumns().get(i);
@@ -158,7 +194,6 @@ public class DataFrameHandler {
             }
         }
         
-        //Copiar las estructuras originales
         DataFrame df1 = df.copy();
         DataFrame df2 = other.copy();
         
@@ -173,7 +208,7 @@ public class DataFrameHandler {
             data.add(df2.buildRow(r.getIndex(),df2.getColumns()));
         }
         
-        // Extraer etiquetas de columnas
+        // Se extraen las etiquetas de columnas
             List<Object> columnLabels = df1.getColumns().stream()
                                             .map(c -> c.getLabel().getLabel())
                                             .collect(Collectors.toList());
@@ -214,34 +249,5 @@ public class DataFrameHandler {
 
         return new DataFrame(data, columnLabels, null);
     }
-/* 
-    public DataFrame fillna(Object label, Object value){
-        
-        DataFrame df1 = this.df.copy();
-
-        int colIndex = df1.buscarColumna(new Label(label));
-        Column column = df1.getColumns().get(colIndex);
-
-        Class<?> expectedType = column.getType();
-
-        if (value != null && !expectedType.isInstance(value)) {
-            throw new IllegalArgumentException(
-                "Tipo incompatible: se esperaba " + expectedType.getSimpleName() +
-                " pero se recibió " + value.getClass().getSimpleName()
-            );
-        }
-
-
-        for (int i=0; i< column.size(); i++) {
-            List<Cell<?>> cellList = column.getCells();
-            Cell celda = cellList.get(i);
-            Label row_Label = df1.getRows().get(i).getLabel();
-            if (celda.getValue() instanceof MissingValue) {
-                df1.setValue( row_Label.getLabel(),column.getLabel().getLabel() , value);
-            }
-        }
-        
-        return df1;
-    }*/
 
 }

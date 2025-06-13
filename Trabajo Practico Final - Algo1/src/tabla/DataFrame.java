@@ -440,36 +440,7 @@ public class DataFrame {
         throw new IndexOutOfBoundsException("Fila con etiqueta no encontrada: " + label);
     }
 
-    public void slice(List<?> columnLabels, List<?> rowLabels){
-        
-        List<Column> columnList = new ArrayList<>();
-        List<List<Object>> rowList = new ArrayList<>();
-        List<Label> cLabels = new ArrayList<>();
-        List<Label> rLabels = new ArrayList<>();
 
-        if(columnLabels==null || columnLabels.isEmpty()){
-            columnLabels = this.getColumnLabels();
-        }
-        if(rowLabels==null || rowLabels.isEmpty() ){
-            rowLabels = this.getRowLabels();  
-        }
-        
-        for (Object l:columnLabels){
-            Column c = obtenerColumna(l);
-            columnList.add(c);
-            cLabels.add(c.getLabel());
-        }
-         
-        for (Object l:rowLabels){
-            Row r = obtenerFila(l);
-            rowList.add(buildRow(r.getIndex(),columnList));
-            rLabels.add(r.getLabel());
-        }
-        
-        DataFrameView tabla = new DataFrameView();
-        System.out.println(tabla.formatTable(rowList, rLabels, cLabels));
-
-    }
 
     //Modificación del DataFrame
 
@@ -536,6 +507,10 @@ public class DataFrame {
         }
     }
 
+    //Slicing
+    public void slice(List<?> columnLabels, List<?> rowLabels){
+        handler.slice(columnLabels, rowLabels);
+    }
 
     //Copia
     public DataFrame copy(){

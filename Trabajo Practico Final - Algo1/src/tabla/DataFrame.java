@@ -370,6 +370,10 @@ public class DataFrame {
         }
     }
 
+    //Acceso indexado
+
+
+
     // --- 3.1 Metodos auxiliares de Visualización ---
     
     protected List<Object> buildRow(int i, List<Column> list){
@@ -382,7 +386,7 @@ public class DataFrame {
 
 
 
-    // --- 4.0 Metodos de selección ---
+    // --- 4.0 Metodos de acceso indexado y selección ---
 
     public Row obtenerFila(Object input) throws IndexOutOfBoundsException {
         int index = -1;
@@ -399,7 +403,7 @@ public class DataFrame {
         } else {
             throw new IllegalArgumentException("Tipo de argumento no soportado: " + input.getClass());
         }
-        return rows.get(index);
+        return new Row(rows.get(index));
     }
 
     protected int buscarFila(Label label) {
@@ -428,7 +432,13 @@ public class DataFrame {
         }
 
         // Obtener la columna y construir la lista de celdas
-        return columns.get(index);
+        return new Column(columns.get(index));
+    }
+
+    public Cell<?> obtenerCelda(Object rowLabel, Object columnLabel){
+        int indice = this.obtenerFila(rowLabel).getIndex();
+        Cell celda = this.obtenerColumna(columnLabel).getCell(indice);
+        return new Cell<>(celda);
     }
 
     protected int buscarColumna(Label label) {

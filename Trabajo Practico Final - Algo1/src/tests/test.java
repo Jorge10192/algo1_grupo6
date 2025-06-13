@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import exceptions.InvalidShape;
+import importador.CSVExporter;
 import importador.CSVParser;
 import tabla.*;
 
@@ -27,6 +28,9 @@ public class test {
             df3.fillna("Nombre","Tuki");
 
             df3.head(10);
+
+            CSVExporter exporter = new CSVExporter();
+            exporter.exportDataFrame("C:/Users/usuario/Downloads/prueba5.csv", df3);
 
         }catch(Exception e){
             System.err.println(("Error al importar el CSV: " + e.getMessage()));;
